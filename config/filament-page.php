@@ -18,9 +18,9 @@ return [
         'page_widget_field' => PageWidgetField::class,
     ],
     'tables' => [
-        'pages' => 'nova_pages', 'page_revisions' => 'nova_page_revisions',
-        'page_components' => 'nova_page_components', 'page_component_fields' => 'nova_page_component_fields',
-        'page_widgets' => 'nova_page_widgets', 'page_widget_fields' => 'nova_page_widget_fields',
+        'pages' => 'filament_pages', 'page_revisions' => 'filament_page_revisions',
+        'page_components' => 'filament_page_components', 'page_component_fields' => 'filament_page_component_fields',
+        'page_widgets' => 'filament_page_widgets', 'page_widget_fields' => 'filament_page_widget_fields',
     ],
     'page_types_class' => PageType::class,
     'creation_limited_page_types' => ['homepage' => 1, '404_page' => 1],
