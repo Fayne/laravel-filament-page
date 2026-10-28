@@ -46,7 +46,68 @@ return $panel->plugins([
 
 插件注册页面、模板、组件、Widget、字段与修订资源。通过 Core 角色管理分配查看、创建、修改、删除及相关操作权限；组件定义和正文图片上传也有独立授权。租户工作台使用 `SetTenantContext`，平台超级管理员不会自动绕过租户成员关系。
 
-## 3. 页面、组件与模板
+## 3. 通过配置扩展 Model、Resource 与 URI
+
+宿主可以分别替换模型、后台 Resource 和后台路径，无需修改包源码，也无需复制所有内置页面。对应旧 Nova 的 `models` / `resources` / `uri_key`，Filament 使用 `models` / `resources` / `resource_slugs`。
+
+先创建继承包模型的宿主模型：
+
+```php
+namespace App\Models;
+
+class Page extends \Fayne\Page\Models\Page
+{
+}
+```
+
+再继承包 Resource；下面在原表单中追加宿主字段，使用已有 JSON 属性保存：
+
+```php
+namespace App\Filament\Resources;
+
+use Fayne\Page\Filament\Resources\PageResource as BasePageResource;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
+
+class PageResource extends BasePageResource
+{
+    public static function form(Schema $schema): Schema
+    {
+        $schema = parent::form($schema);
+
+        return $schema->components([
+            ...$schema->getComponents(),
+            TextInput::make('extra_data.project_note'),
+        ]);
+    }
+}
+```
+
+在已发布配置中设置对应键。以下是配置片段；配置使用 Laravel 原生递归合并，宿主同名值优先，未填写的嵌套键保留包默认值：
+
+```php
+// config/filament-page.php
+'models' => [
+    'page' => \App\Models\Page::class,
+],
+'resources' => [
+    'page' => \App\Filament\Resources\PageResource::class,
+],
+'resource_slugs' => [
+    'page' => 'content-pages',
+],
+```
+
+- 模型、Resource 和 slug 可独立配置，不要求三者同时替换。`models` 是模型选择的配置入口，不依赖宿主 Resource 的 `$model` 属性猜测配置。
+- 两个映射支持的键为：`page`、`page_template`、`page_revision`、`page_component`、`page_component_field`、`page_widget`、`page_widget_field`。Page Template 的创建、查询和权限也遵循 `models.page_template`。自定义类应继承对应包类，并保留原有租户、语言、关联、内容及权限契约。
+- 插件注册配置的 Resource；内置列表、创建、编辑及关联入口跟随新类。模板、修订和语言切换不会回跳默认 Resource。宿主可以继承 `getPages()`，也可覆写它以替换个别页面。
+- `resource_slugs` 默认为空。未配置时保留 Filament 原生 `$slug`、默认推导及 Panel ResourceConfiguration；继承包方法时，显式配置优先。自行覆写 `getSlug()` 且不调用父方法时，由宿主实现负责处理配置。
+- `content-pages` 修改的是后台 Resource 路径，例如 `/admin/content-pages`；不修改前端内容路径或 Headless API。导航标签、分组、表格和操作可用 Filament 原生覆写方式定制。
+- 继续通过 `PagePlugin` 注册；若宿主启用了 Resource 自动发现，避免同时发现/注册默认类与替代类。自定义 Policy 使用 Laravel 标准注册方式，并在宿主中确保注册顺序，不绕过原有授权范围。
+
+修改后清理并按部署流程重新生成配置/路由缓存，重启长驻进程。旧版已发布配置可以补充上述新键，缺失模型/Resource 默认键会自动补齐；不需要改动业务表或内容结构。
+
+## 4. 页面、组件与模板
 
 1. 先创建或导入 Component/Widget 定义，再配置字段类型、选项和验证规则。
 2. 创建页面，选择类型和内容语言，填写以 `/` 开头且不含查询串/片段的路径、标题和 SEO 信息。
@@ -63,9 +124,9 @@ return $panel->plugins([
 'use_default_frontend_routes' => true,
 ```
 
-默认类型为 `basic`、`homepage`、`404_page`；可用实现 `getSelectOptions()` 的自定义类型类替换 `page_types_class`。类型数量上限按当前租户/区域及内容语言校验。`meta` 保存附加 SEO 数据，HTML 标签由前端渲染，本包不生成公开网站。
+默认类型为 `basic`、`homepage`、`404_page`；可用实现 `getSelectOptions()` 的自定义类型类替换 `page_types_class`。类型数量上限按当前租户/区域及内容语言校验。禁用默认类型上限时，将对应键设为 `null`（例如 `'homepage' => null`）；空数组不会清除递归合并的默认键。`meta` 保存附加 SEO 数据，HTML 标签由前端渲染，本包不生成公开网站。
 
-## 4. 中英文与内容语言
+## 5. 中英文与内容语言
 
 界面提供 `zh_CN` 与 `en`；管理员个人资料中的界面语言不改变页面内容语言。内容语言在 Core 全局或租户中配置：
 
@@ -78,7 +139,7 @@ return $panel->plugins([
 
 列表按翻译组展示，编辑页切换已有译本或创建缺失语言。不同语言版本分别编辑路径和内容，不自动机器翻译。自定义组件名称、字段标签和帮助文字需要自行提供多语言。前端使用 `locale` 请求具体内容；v2 详情提供可用公开译本，缺失语言不会静默返回另一语言。
 
-## 5. 演示首页与组件库
+## 6. 演示首页与组件库
 
 ```bash
 php artisan cms:page:init
@@ -92,7 +153,7 @@ php artisan cms:page:init --no-interaction
 
 组件列表支持上传/粘贴 JSON 导入，以及导出当前范围的组件库。可使用包内 `resources/defaults/components.json`。重复 slug 时选择更新或跳过；导入会重映射嵌套 Widget 引用并保留未提交字段。图片仅保留 disk/path 元数据，实际文件需另行复制到相应磁盘；组件库导入不导入页面正文。
 
-## 6. 前端 API 与草稿预览
+## 7. 前端 API 与草稿预览
 
 | 用途 | 请求 | 行为 |
 | --- | --- | --- |
@@ -120,7 +181,7 @@ curl -H "Authorization: Bearer $PREVIEW_TOKEN" \
 
 token 有效期 600 秒、可重复读取，绑定租户、页面、路径、语言和数据库连接；每次重新验证管理员状态、成员关系及查看权限。仅已保存到服务器的编辑可被读取，不包含浏览器未保存状态。响应正文为 `data`，包含 `entity_type`、`entity_id`、`revision_id`、`path`、`locale` 与 `projection`。避免将 token 写入访问日志或分析系统。
 
-## 7. 冻结构建与宿主职责
+## 8. 冻结构建与宿主职责
 
 冻结接口跟随 Core 的 `CMS_HEADLESS_PREFIX`，要求服务端 `CMS_BUILD_API_TOKEN` 与清单租户匹配。只允许 `frozen`/`succeeded` 清单；旧无租户归属清单拒绝读取，需重新发布。
 
@@ -133,7 +194,7 @@ curl -H "Authorization: Bearer $CMS_BUILD_API_TOKEN" \
 
 本包提供快照及发布成功后的修订处理，不独立提供完整部署编排、预约发布或外部构建服务。宿主需接入发布流程、签名回调、失败处理与回滚。关闭 `use_default_frontend_routes` 不会关闭独立注册的 draft 和冻结接口。
 
-## 8. 配置扩展、测试与上线
+## 9. 配置扩展、测试与上线
 
 `filament-page.models` 与 `tables` 可替换模型和表名；自定义模型需保留租户、语言、修订和内容契约。复杂字段、文件磁盘、HTTP 与实体解析见 [Page Builder](../laravel-filament-page-builder/README.md)。
 
@@ -148,6 +209,8 @@ node --test tests/Browser/quick-builder-drag.test.cjs
 
 上线前验证组件导入、保存重开、真实拖拽、两种语言、公开/草稿 API、区域与租户隔离，以及同一 release 的构建/回调。检查实际存储 URL、队列和缓存；部署全部依赖并刷新配置/路由缓存，重启长驻进程。包测试不等于生产链路验收。
 
+开发包的 `composer.lock` 不提交，允许本地生成并忽略；宿主应用应保留自己的锁文件用于生产部署。
+
 ## 贡献代码
 
 1. 创建功能分支。
@@ -159,3 +222,7 @@ node --test tests/Browser/quick-builder-drag.test.cjs
 ## 许可证
 
 本软件采用[专有许可证](LICENSE.md)，使用与分发须遵守其中的授权限制。
+
+## 整站冻结 API v2
+
+启用 Core 发布路由后，`/headless/releases/{release_id}/pages` 从不可变公共清单读取，不依赖当前区域、语言或路由配置。通过所属租户域名及构建 Bearer token 鉴权。页面枚举支持 `target_id`、`scope_id`；多范围 source_path 查询必须指定 scope，最终 path 匹配多个范围时也需 scope。未知或不兼容范围/目标返回 422。响应携带冻结最终 URL、翻译 URL，不暴露原始晋升内容和连接标识。整站页面在所有区域晋升完成后才记录成功，部分失败可重试且不重复创建发布版本。

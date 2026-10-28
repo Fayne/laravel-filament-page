@@ -21,7 +21,7 @@ final class PageTranslationService
             $gate->authorize('view', $source);
             $gate->authorize('create', $source::class);
             $locale = ContentLocale::resolve($locale);
-            if (! Page::isMultilingualEnabled()) {
+            if (! config('filament-page.models.page')::isMultilingualEnabled()) {
                 throw ValidationException::withMessages(['locale' => __('filament-page::translations.disabled')]);
             }
 

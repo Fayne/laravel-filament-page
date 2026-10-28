@@ -7,7 +7,6 @@ use Fayne\CMS\Http\Middleware\ResolvePublicTenant;
 use Fayne\CMS\Http\Middleware\SelectContentRegion;
 use Fayne\CMS\Support\ReleaseSnapshotRegistry;
 use Fayne\Page\Console\InitializeCommand;
-use Fayne\Page\Models\PageTemplate;
 use Fayne\Page\Policies\PageComponentFieldPolicy;
 use Fayne\Page\Policies\PageComponentPolicy;
 use Fayne\Page\Policies\PagePolicy;
@@ -35,11 +34,12 @@ class PageServiceProvider extends ServiceProvider
                 $registry->register(new PageReleaseSnapshotProvider);
             }
         });
-        $this->mergeConfigFrom(__DIR__.'/../config/filament-page.php', 'filament-page');
     }
 
     public function boot(): void
     {
+        $this->replaceConfigRecursivelyFrom(__DIR__.'/../config/filament-page.php', 'filament-page');
+
         Event::listen(PublicationSucceeded::class, PromoteReleasedPages::class);
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-page');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
@@ -53,7 +53,7 @@ class PageServiceProvider extends ServiceProvider
             }
             $this->loadRoutesFrom(__DIR__.'/../routes/preview.php');
         }
-        Gate::policy(PageTemplate::class, PageComponentPolicy::class);
+        Gate::policy(config('filament-page.models.page_template'), PageComponentPolicy::class);
         Gate::policy(config('filament-page.models.page_revision'), PageRevisionPolicy::class);
         Gate::policy(config('filament-page.models.page_widget_field'), PageWidgetFieldPolicy::class);
         Gate::policy(config('filament-page.models.page_widget'), PageWidgetPolicy::class);

@@ -20,9 +20,9 @@ final class ReleasePageController extends Controller
         app(FrozenReleaseAccess::class)->authorize($request, $manifest);
 
         return response()->json([
-            'data' => collect($manifest->entries['page'] ?? [])
+            'data' => collect(app(\Fayne\CMS\Publishing\FrozenReleaseEntries::class)->select($manifest, $request, 'page'))
                 ->when($request->filled('path'), fn ($pages) => $pages->where('path', $request->string('path')->toString()))
-                ->map(fn ($entry) => Arr::except($entry, ['content_snapshot', 'comparison_projection', 'connection']))->values(),
+                ->map(fn ($entry) => Arr::except($entry, ['content_snapshot', 'comparison_projection', 'connection', 'translation_group_id']))->values(),
         ]);
     }
 }

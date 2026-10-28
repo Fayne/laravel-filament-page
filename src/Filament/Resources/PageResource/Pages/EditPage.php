@@ -4,9 +4,9 @@ namespace Fayne\Page\Filament\Resources\PageResource\Pages;
 
 use Fayne\CMS\Filament\Operations\EditRecord;
 use Fayne\CMS\Support\ContentLocale;
+use Fayne\Page\Filament\Concerns\ResolvesConfiguredResource;
 use Fayne\Page\Filament\Resources\PageResource;
 use Fayne\Page\Filament\Resources\PageResource\Pages\Concerns\BuildsPageOutline;
-use Fayne\Page\Models\PageTemplate;
 use Fayne\Page\Services\PageContentValidator;
 use Fayne\Page\Services\PageRevisionService;
 use Fayne\Page\Services\PageTemplateService;
@@ -24,6 +24,7 @@ use Illuminate\Validation\ValidationException;
 class EditPage extends EditRecord
 {
     use BuildsPageOutline;
+    use ResolvesConfiguredResource;
 
     protected static string $resource = PageResource::class;
 
@@ -68,7 +69,7 @@ class EditPage extends EditRecord
                 ->action(function (array $data): void {
                     $this->assertSavedBeforeLanguageChange();
                     $target = app(PageTranslationService::class)->create($this->record, $data['locale'], $data['path']);
-                    $this->redirect(PageResource::getUrl('edit', ['record' => $target]), navigate: false);
+                    $this->redirect(PageResource::configuredResource()::getUrl('edit', ['record' => $target]), navigate: false);
                 }),
             Action::make('switchLanguage')->label(__('filament-page::translations.switch'))
                 ->visible(fn (): bool => $this->record::isMultilingualEnabled())
@@ -84,7 +85,7 @@ class EditPage extends EditRecord
                     }
                     Gate::authorize('view', $target);
                     Gate::authorize('update', $target);
-                    $this->redirect(PageResource::getUrl('edit', ['record' => $target]), navigate: false);
+                    $this->redirect(PageResource::configuredResource()::getUrl('edit', ['record' => $target]), navigate: false);
                 }),
             Action::make('preview')->label(__('filament-page::translations.preview'))
                 ->visible(fn (): bool => filled(config('filament-page.page_preview_url')))
@@ -110,7 +111,7 @@ class EditPage extends EditRecord
                 }),
             Action::make('saveTemplate')->label(__('filament-page::ui.save_as_template'))
                 ->modalDescription(__('filament-page::ui.save_template_help'))
-                ->authorize(fn (): bool => Gate::allows('view', $this->record) && Gate::allows('create', PageTemplate::class))
+                ->authorize(fn (): bool => Gate::allows('view', $this->record) && Gate::allows('create', config('filament-page.models.page_template')))
                 ->schema([TextInput::make('name')->label(__('filament-page::ui.template_name'))->required()->maxLength(255), Textarea::make('description')->label(__('filament-page::ui.description'))])
                 ->action(function (array $data): void {
                     $this->assertSavedBeforeLanguageChange();

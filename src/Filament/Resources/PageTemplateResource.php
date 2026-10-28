@@ -2,6 +2,7 @@
 
 namespace Fayne\Page\Filament\Resources;
 
+use Fayne\Page\Filament\Concerns\HasResourceConfiguration;
 use Fayne\Page\Models\PageTemplate;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -18,6 +19,10 @@ use Illuminate\Support\Facades\Gate;
 
 class PageTemplateResource extends Resource
 {
+    use HasResourceConfiguration;
+
+    protected static string $configurationKey = 'page_template';
+
     public static function getNavigationLabel(): string
     {
         return __('filament-page::navigation.page_templates');
@@ -35,6 +40,11 @@ class PageTemplateResource extends Resource
     public static function getModelLabel(): string
     {
         return __('filament-page::ui.page_template');
+    }
+
+    public static function getModel(): string
+    {
+        return config('filament-page.models.page_template', static::$model);
     }
 
     public static function form(Schema $schema): Schema

@@ -43,7 +43,7 @@ class PageTemplateService
     {
         return app(Operations::class)->run('page.template.create', function () use ($page, $data): PageTemplate {
             Gate::authorize('view', $page);
-            Gate::authorize('create', PageTemplate::class);
+            Gate::authorize('create', config('filament-page.models.page_template'));
             $page = $page->fresh();
             $definitions = $this->definitions($page->getConnectionName());
             $adapter = new ContentStateAdapter($definitions);
@@ -53,7 +53,7 @@ class PageTemplateService
                 $adapter->toBuilder($content);
                 $structure[$attribute] = $this->skeleton($content, $definitions);
             }
-            $template = (new PageTemplate)->setConnection($page->getConnectionName());
+            $template = (new (config('filament-page.models.page_template')))->setConnection($page->getConnectionName());
             $template->fill(['name' => $data['name'], 'description' => $data['description'] ?? null, 'type' => $page->type, 'structure' => $structure, 'is_active' => true])->save();
 
             return $template;

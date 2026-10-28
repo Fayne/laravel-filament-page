@@ -3,6 +3,7 @@
 namespace Fayne\Page\Filament\Resources;
 
 use Fayne\CMS\Support\ContentFieldTypes;
+use Fayne\Page\Filament\Concerns\HasResourceConfiguration;
 use Fayne\Page\Models\PageComponentField;
 use Fayne\PageBuilder\Filament\Forms\FieldDefinitionSchema;
 use Filament\Actions\DeleteAction;
@@ -14,6 +15,10 @@ use Filament\Tables\Table;
 
 class PageComponentFieldResource extends Resource
 {
+    use HasResourceConfiguration;
+
+    protected static string $configurationKey = 'page_component_field';
+
     public static function getNavigationLabel(): string
     {
         return __('filament-page::navigation.component_fields');
@@ -41,7 +46,7 @@ class PageComponentFieldResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            FieldDefinitionSchema::owner('page_component_id', config('filament-page.models.page_component'), PageComponentResource::class, __('filament-page::ui.owning_component')),
+            FieldDefinitionSchema::owner('page_component_id', config('filament-page.models.page_component'), PageComponentResource::configuredResource(), __('filament-page::ui.owning_component')),
             ...static::fieldFormComponents(),
         ]);
     }

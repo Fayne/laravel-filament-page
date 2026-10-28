@@ -4,6 +4,7 @@ namespace Fayne\Page\Filament\Resources;
 
 use Fayne\CMS\Support\ContentLocale;
 use Fayne\CMS\Support\Operations\Operations;
+use Fayne\Page\Filament\Concerns\HasResourceConfiguration;
 use Fayne\Page\Models\Page;
 use Fayne\Page\Services\PageContentValidator;
 use Fayne\PageBuilder\Filament\Forms\Components\ContentBuilder;
@@ -34,6 +35,10 @@ use Illuminate\Support\Facades\Gate;
 
 class PageResource extends Resource
 {
+    use HasResourceConfiguration;
+
+    protected static string $configurationKey = 'page';
+
     public static function getNavigationLabel(): string
     {
         return __('filament-page::navigation.pages');
@@ -60,7 +65,7 @@ class PageResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->when(! Page::isMultilingualEnabled(), fn (Builder $query) => $query->locale());
+        return parent::getEloquentQuery()->when(! config('filament-page.models.page')::isMultilingualEnabled(), fn (Builder $query) => $query->locale());
     }
 
     public static function form(Schema $schema): Schema
@@ -77,7 +82,7 @@ class PageResource extends Resource
                         $set('fixed_components', (new ContentStateAdapter($definitions))->toBuilder($raw));
                     }),
                     Select::make('locale')->label(__('filament-page::translations.locale'))
-                        ->options(fn (): array => Page::isMultilingualEnabled() ? ContentLocale::supported() : [ContentLocale::default() => ContentLocale::supported()[ContentLocale::default()]])
+                        ->options(fn (): array => config('filament-page.models.page')::isMultilingualEnabled() ? ContentLocale::supported() : [ContentLocale::default() => ContentLocale::supported()[ContentLocale::default()]])
                         ->default(fn (): string => ContentLocale::default())->required()
                         ->disabled(fn (?Page $record): bool => $record?->exists ?? false)->dehydrated(fn (?Page $record): bool => ! ($record?->exists ?? false)),
                     Toggle::make('is_active')->label(__('filament-page::translations.active')),
@@ -145,7 +150,7 @@ class PageResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('locale')->label(__('filament-page::translations.locale'))
-                    ->options(fn (): array => Page::isMultilingualEnabled() ? ContentLocale::supported() : [ContentLocale::default() => ContentLocale::supported()[ContentLocale::default()]])
+                    ->options(fn (): array => config('filament-page.models.page')::isMultilingualEnabled() ? ContentLocale::supported() : [ContentLocale::default() => ContentLocale::supported()[ContentLocale::default()]])
                     ->query(fn (Builder $query, array $data): Builder => $query->when(
                         filled($data['value'] ?? null),
                         fn (Builder $query): Builder => $query->whereHas('translationVariants', fn (Builder $variants): Builder => $variants->where('locale', $data['value'])),

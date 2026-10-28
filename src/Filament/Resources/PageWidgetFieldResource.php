@@ -3,6 +3,7 @@
 namespace Fayne\Page\Filament\Resources;
 
 use Fayne\CMS\Support\ContentFieldTypes;
+use Fayne\Page\Filament\Concerns\HasResourceConfiguration;
 use Fayne\Page\Models\PageWidgetField;
 use Fayne\PageBuilder\Filament\Forms\FieldDefinitionSchema;
 use Filament\Actions\DeleteAction;
@@ -14,6 +15,10 @@ use Filament\Tables\Table;
 
 class PageWidgetFieldResource extends Resource
 {
+    use HasResourceConfiguration;
+
+    protected static string $configurationKey = 'page_widget_field';
+
     public static function getNavigationLabel(): string
     {
         return __('filament-page::navigation.widget_fields');
@@ -41,7 +46,7 @@ class PageWidgetFieldResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            FieldDefinitionSchema::owner('nova_page_widget_id', config('filament-page.models.page_widget'), PageWidgetResource::class, __('filament-page::ui.owning_widget')),
+            FieldDefinitionSchema::owner('nova_page_widget_id', config('filament-page.models.page_widget'), PageWidgetResource::configuredResource(), __('filament-page::ui.owning_widget')),
             ...static::fieldFormComponents(),
         ]);
     }

@@ -46,7 +46,68 @@ return $panel->plugins([
 
 The plugin registers page, template, component, widget, field, and revision resources. Assign view, create, update, delete, and action permissions through Core roles; definition management and inline image uploads also have authorization checks. Tenant workspaces use `SetTenantContext`; platform super-admin access does not automatically bypass tenant membership.
 
-## 3. Pages, components, and templates
+## 3. Extend models, resources, and URIs through configuration
+
+Hosts can replace models, admin Resources, and admin paths independently without editing package source or copying every built-in page. The Nova `models` / `resources` / `uri_key` configuration corresponds to Filament `models` / `resources` / `resource_slugs`.
+
+Create a host model extending the package model:
+
+```php
+namespace App\Models;
+
+class Page extends \Fayne\Page\Models\Page
+{
+}
+```
+
+Then extend the package Resource. This example adds a host field to the original form and stores it in an existing JSON attribute:
+
+```php
+namespace App\Filament\Resources;
+
+use Fayne\Page\Filament\Resources\PageResource as BasePageResource;
+use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
+
+class PageResource extends BasePageResource
+{
+    public static function form(Schema $schema): Schema
+    {
+        $schema = parent::form($schema);
+
+        return $schema->components([
+            ...$schema->getComponents(),
+            TextInput::make('extra_data.project_note'),
+        ]);
+    }
+}
+```
+
+Set the corresponding keys in the published configuration. This is a configuration fragment. Laravel recursively merges configuration: host values take precedence, while omitted nested keys retain package defaults:
+
+```php
+// config/filament-page.php
+'models' => [
+    'page' => \App\Models\Page::class,
+],
+'resources' => [
+    'page' => \App\Filament\Resources\PageResource::class,
+],
+'resource_slugs' => [
+    'page' => 'content-pages',
+],
+```
+
+- Models, Resources, and slugs can be replaced independently. `models` selects model classes; configuration is not inferred from a host Resource's `$model` property.
+- Supported mapping keys are `page`, `page_template`, `page_revision`, `page_component`, `page_component_field`, `page_widget`, `page_widget_field`. Page Template creation, queries, and authorization also follow `models.page_template`. Custom classes should extend their corresponding package classes and preserve tenant, language, relationship, content, and authorization contracts.
+- The plugin registers configured Resources; built-in lists, creation, editing, and relationship entry points follow them. Templates, revisions, and language switching do not redirect back to default Resources. Inherit `getPages()` or override it to replace individual pages.
+- `resource_slugs` is empty by default. Without an entry, Filament's native `$slug`, default inference, and Panel ResourceConfiguration remain effective. Explicit configuration takes priority when inheriting the package method. A host overriding `getSlug()` without calling its parent is responsible for honoring configuration itself.
+- `content-pages` changes the admin Resource path, for example `/admin/content-pages`, not frontend content paths or Headless APIs. Customize navigation labels, groups, tables, and actions through native Filament overrides.
+- Keep registration through `PagePlugin`. When using Resource auto-discovery, avoid discovering/registering both the default and replacement classes. Register custom policies through Laravel, with the appropriate host provider order, without bypassing authorization scopes.
+
+After changes, clear and regenerate configuration/route caches through the deployment process and restart long-running processes. Older published configuration can add these keys; omitted model/Resource defaults are filled automatically. No business-table or content-format changes are required.
+
+## 4. Pages, components, and templates
 
 1. Create or import Component/Widget definitions, then configure field types, options, and validation rules.
 2. Create a page, select its type and content language, and enter a path starting with `/` without a query or fragment, a title, and SEO information.
@@ -63,9 +124,9 @@ The plugin registers page, template, component, widget, field, and revision reso
 'use_default_frontend_routes' => true,
 ```
 
-Built-in types are `basic`, `homepage`, and `404_page`. Replace `page_types_class` with a custom class implementing `getSelectOptions()` when needed. Type limits are validated within the current tenant/region and content language. `meta` stores additional SEO data; the frontend renders the HTML tags. This package does not generate a public website.
+Built-in types are `basic`, `homepage`, and `404_page`. Replace `page_types_class` with a custom class implementing `getSelectOptions()` when needed. Type limits are validated within the current tenant/region and content language. To disable a default limit, set its key to `null` (for example, `'homepage' => null`); an empty array does not clear recursively merged default keys. `meta` stores additional SEO data; the frontend renders the HTML tags. This package does not generate a public website.
 
-## 4. Chinese, English, and content languages
+## 5. Chinese, English, and content languages
 
 The interface provides `zh_CN` and `en`; the profile's interface language does not change page content language. Configure content languages globally or per tenant in Core:
 
@@ -78,7 +139,7 @@ The interface provides `zh_CN` and `en`; the profile's interface language does n
 
 The list groups translations, while the edit page switches existing versions or creates missing languages. Each language has separately edited paths and content without automatic machine translation. Supply localized component names, field labels, and help text yourself. Frontends request a content language through `locale`; v2 detail lists available public translations and does not silently return another language when one is missing.
 
-## 5. Demo homepages and component libraries
+## 6. Demo homepages and component libraries
 
 ```bash
 php artisan cms:page:init
@@ -92,7 +153,7 @@ Interactive demo creation defaults to no. `--tenant` accepts an active tenant ID
 
 The component list imports uploaded/pasted JSON and exports the current scope's component library. The package includes `resources/defaults/components.json`. For duplicate slugs, choose update or skip. Imports remap nested widget references and retain omitted fields. Images retain disk/path metadata only; copy actual files separately to the matching disk. Component-library import does not import page content.
 
-## 6. Frontend APIs and draft previews
+## 7. Frontend APIs and draft previews
 
 | Purpose | Request | Behavior |
 | --- | --- | --- |
@@ -120,7 +181,7 @@ curl -H "Authorization: Bearer $PREVIEW_TOKEN" \
 
 Tokens last 600 seconds and may be reused, binding tenant, page, path, language, and database connection. Each request rechecks administrator status, membership, and view permission. Only server-saved edits are readable; unsaved browser form state is not included. The response has a `data` envelope containing `entity_type`, `entity_id`, `revision_id`, `path`, `locale`, and `projection`. Keep tokens out of access logs and analytics.
 
-## 7. Frozen builds and host responsibilities
+## 8. Frozen builds and host responsibilities
 
 Frozen endpoints follow Core's `CMS_HEADLESS_PREFIX` and require the server-side `CMS_BUILD_API_TOKEN` with matching manifest tenant ownership. Only `frozen`/`succeeded` manifests are readable. Legacy manifests without tenant ownership are rejected and must be republished.
 
@@ -133,7 +194,7 @@ Static builds should read pages, menus, and settings from the same release ID ra
 
 The package supplies snapshots and revision promotion after successful publication, not complete deployment orchestration, scheduled publishing, or an external build service. The host integrates publication, signed callbacks, failure handling, and rollback. Disabling `use_default_frontend_routes` does not disable the separately registered draft and frozen endpoints.
 
-## 8. Configuration, tests, and deployment
+## 9. Configuration, tests, and deployment
 
 `filament-page.models` and `tables` replace models and table names; preserve tenant, language, revision, and content contracts in custom models. See [Page Builder](../../laravel-filament-page-builder/docs/README.en.md) for complex fields, file storage, HTTP, and entity resolution.
 
@@ -148,6 +209,8 @@ node --test tests/Browser/quick-builder-drag.test.cjs
 
 Before deployment, verify component import, save/reopen, actual dragging, both languages, public/draft APIs, region and tenant isolation, and a complete build/callback for one release. Check real storage URLs, queues, and caches. Ship all dependencies, refresh configuration/route caches, and restart long-running processes. Package tests are not production-flow acceptance.
 
+The library does not commit `composer.lock`; local generated lock files are ignored. Host applications should retain their own lock file for production deployment.
+
 ## Contributing
 
 1. Create a feature branch.
@@ -159,3 +222,7 @@ Before deployment, verify component import, save/reopen, actual dragging, both l
 ## License
 
 This software uses a [proprietary license](../LICENSE.md). Use and distribution are subject to its authorization restrictions.
+
+## Whole-site frozen API v2
+
+With Core publication routing configured, `/headless/releases/{release_id}/pages` reads the immutable public bundle, independent of current region, locale or routing settings. Authenticate with the build Bearer token through the owning tenant domain. Page list enumeration accepts `target_id` and `scope_id`. A `source_path` query across multiple scopes requires `scope_id`; final `path` queries that match multiple scopes also return 422 without it. Unknown or incompatible scope/target values return 422. Rows expose frozen final URLs and translation URLs, with no raw promotion snapshots or connection identifiers. Whole-site promotion finishes all regional sources before success; interrupted promotion can be retried without duplicate revisions.

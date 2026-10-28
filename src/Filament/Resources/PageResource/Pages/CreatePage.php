@@ -4,9 +4,9 @@ namespace Fayne\Page\Filament\Resources\PageResource\Pages;
 
 use Fayne\CMS\Filament\Operations\CreateRecord;
 use Fayne\CMS\Support\ContentLocale;
+use Fayne\Page\Filament\Concerns\ResolvesConfiguredResource;
 use Fayne\Page\Filament\Resources\PageResource;
 use Fayne\Page\Filament\Resources\PageResource\Pages\Concerns\BuildsPageOutline;
-use Fayne\Page\Models\PageTemplate;
 use Fayne\Page\Services\PageContentValidator;
 use Fayne\Page\Services\PageTemplateService;
 use Filament\Actions\Action;
@@ -17,6 +17,7 @@ use Illuminate\Validation\ValidationException;
 class CreatePage extends CreateRecord
 {
     use BuildsPageOutline;
+    use ResolvesConfiguredResource;
 
     protected function fillForm(): void
     {
@@ -30,9 +31,9 @@ class CreatePage extends CreateRecord
     {
         return [Action::make('useTemplate')->label(__('filament-page::ui.create_from_template'))
             ->modalDescription(__('filament-page::ui.apply_template_help'))->requiresConfirmation()
-            ->schema([Select::make('template')->label(__('filament-page::ui.page_template'))->required()->searchable()->options(fn () => PageTemplate::query()->where('is_active', true)->get()->filter(fn ($record) => Gate::allows('view', $record))->pluck('name', 'id')->all())])
+            ->schema([Select::make('template')->label(__('filament-page::ui.page_template'))->required()->searchable()->options(fn () => config('filament-page.models.page_template')::query()->where('is_active', true)->get()->filter(fn ($record) => Gate::allows('view', $record))->pluck('name', 'id')->all())])
             ->action(function (array $data): void {
-                $template = PageTemplate::query()->findOrFail($data['template']);
+                $template = config('filament-page.models.page_template')::query()->findOrFail($data['template']);
                 $values = app(PageTemplateService::class)->apply($template);
                 $state = $this->data;
                 foreach (['components', 'fixed_components'] as $attribute) {

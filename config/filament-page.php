@@ -1,15 +1,24 @@
 <?php
 
+use Fayne\Page\Filament\Resources\PageComponentFieldResource;
+use Fayne\Page\Filament\Resources\PageComponentResource;
+use Fayne\Page\Filament\Resources\PageResource;
+use Fayne\Page\Filament\Resources\PageRevisionResource;
+use Fayne\Page\Filament\Resources\PageTemplateResource;
+use Fayne\Page\Filament\Resources\PageWidgetFieldResource;
+use Fayne\Page\Filament\Resources\PageWidgetResource;
 use Fayne\Page\Models\Page;
 use Fayne\Page\Models\PageComponent;
 use Fayne\Page\Models\PageComponentField;
 use Fayne\Page\Models\PageRevision;
+use Fayne\Page\Models\PageTemplate;
 use Fayne\Page\Models\PageWidget;
 use Fayne\Page\Models\PageWidgetField;
 use Fayne\Page\Support\PageType;
 
 return [
     'models' => [
+        'page_template' => PageTemplate::class,
         'page' => Page::class,
         'page_revision' => PageRevision::class,
         'page_component' => PageComponent::class,
@@ -17,6 +26,16 @@ return [
         'page_widget' => PageWidget::class,
         'page_widget_field' => PageWidgetField::class,
     ],
+    'resources' => [
+        'page_revision' => PageRevisionResource::class,
+        'page' => PageResource::class,
+        'page_widget' => PageWidgetResource::class,
+        'page_template' => PageTemplateResource::class,
+        'page_widget_field' => PageWidgetFieldResource::class,
+        'page_component_field' => PageComponentFieldResource::class,
+        'page_component' => PageComponentResource::class,
+    ],
+    'resource_slugs' => [],
     'tables' => [
         'pages' => 'filament_pages', 'page_revisions' => 'filament_page_revisions',
         'page_components' => 'filament_page_components', 'page_component_fields' => 'filament_page_component_fields',

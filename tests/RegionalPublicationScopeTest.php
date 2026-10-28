@@ -24,9 +24,9 @@ class RegionalPublicationScopeTest extends TestCase
 
     public function test_fresh_regional_install_uses_one_scope_for_preview_start_and_history(): void
     {
-        require_once dirname(__DIR__, 2).'/laravel-filament-post-release-status/src/Services/Scope.php';
-        $this->assertFalse(Schema::hasTable('nova_pages'));
-        $this->assertTrue(Schema::connection('regional')->hasTable('nova_pages'));
+        require_once dirname(__DIR__, 2) . '/laravel-filament-post-release-status/src/Services/Scope.php';
+        $this->assertFalse(Schema::hasTable(config('filament-page.tables.pages')));
+        $this->assertTrue(Schema::connection('regional')->hasTable(config('filament-page.tables.pages')));
         Page::on('regional')->create(['name' => 'Regional', 'path' => '/', 'is_active' => true]);
         $context = Scope::context([]);
         $this->assertSame('regional', $context['region']);

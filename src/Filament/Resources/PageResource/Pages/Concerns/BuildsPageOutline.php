@@ -14,7 +14,7 @@ trait BuildsPageOutline
     protected function quickBuilder(): ContentBuilder
     {
         $record = $this->getRecord();
-        Gate::authorize($record ? 'update' : 'create', $record ?? PageResource::getModel());
+        Gate::authorize($record ? 'update' : 'create', $record ?? PageResource::configuredResource()::getModel());
         abort_if(in_array($this->data['type'] ?? '', config('filament-page.excluded_components', []), true), 403);
 
         return $this->form->getComponent(fn ($component) => $component instanceof ContentBuilder && $component->getName() === 'components');

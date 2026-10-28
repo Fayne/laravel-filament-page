@@ -20,7 +20,7 @@ class WholeSitePageSnapshotTest extends TestCase
     {
         parent::defineEnvironment($app);
         foreach (['cn', 'us'] as $region) {
-            $app['config']->set('database.connections.'.$region, ['driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '', 'foreign_key_constraints' => true]);
+            $app['config']->set('database.connections.' . $region, ['driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '', 'foreign_key_constraints' => true]);
         }
         $app['config']->set('filament-cms.regions', [['id' => 'cn', 'database' => 'cn'], ['id' => 'us', 'database' => 'us']]);
         $app['config']->set('filament-cms.multilingual_enabled', true);
@@ -32,10 +32,10 @@ class WholeSitePageSnapshotTest extends TestCase
     {
         $tenant = Tenant::findOrFail(app(TenantContext::class)->requireId());
         foreach (['cn', 'us'] as $region) {
-            $tenant->domains()->create(['host' => $region.'.test', 'is_active' => true]);
+            $tenant->domains()->create(['host' => $region . '.test', 'is_active' => true]);
             $group = (string) Str::uuid();
             foreach (['en', 'zh_CN'] as $locale) {
-                Page::on($region)->create(['name' => $region.' '.$locale, 'title' => $locale, 'path' => '/about', 'locale' => $locale, 'is_active' => true, 'translation_group_id' => $group]);
+                Page::on($region)->create(['name' => $region . ' ' . $locale, 'title' => $locale, 'path' => '/about', 'locale' => $locale, 'is_active' => true, 'translation_group_id' => $group]);
             }
         }
 
@@ -45,7 +45,7 @@ class WholeSitePageSnapshotTest extends TestCase
     public function test_reads_all_real_region_databases_and_freezes_translation_groups_without_id_guesses(): void
     {
         $release = $this->seedPages();
-        $this->assertFalse(Schema::hasTable('nova_pages'));
+        $this->assertFalse(Schema::hasTable(config('filament-page.tables.pages')));
         $manifest = app(ReleaseManifestService::class)->freeze($release);
         $rows = $manifest->entries['page'];
         $this->assertCount(4, $rows);
@@ -72,7 +72,7 @@ class WholeSitePageSnapshotTest extends TestCase
         $release = $this->seedPages();
         foreach (['cn', 'us'] as $connection) {
             foreach (Page::on($connection)->get() as $page) {
-                $page->forceFill(['path' => '/'.$page->locale.'/about'])->save();
+                $page->forceFill(['path' => '/' . $page->locale . '/about'])->save();
             }
         }
         config(['filament-cms.publication_routing.language_prefixes' => []]);
@@ -111,8 +111,67 @@ class WholeSitePageSnapshotTest extends TestCase
         $release->setRelation('releaseManifest', $manifest);
         DB::connection('cn')->enableQueryLog();
         app(PromoteReleasedPages::class)->handle(new PublicationSucceeded($release));
-        $updates = collect(DB::connection('cn')->getQueryLog())->filter(fn ($query) => str_starts_with($query['query'], 'select * from "nova_pages"'));
+        $pageTable = DB::connection('cn')->getQueryGrammar()->wrapTable((new Page)->getTable());
+        $updates = collect(DB::connection('cn')->getQueryLog())->filter(fn ($query) => str_starts_with($query['query'], 'select * from ' . $pageTable . ' '));
         $this->assertCount(2, $updates);
-        $this->assertSame(2, DB::connection('cn')->table('nova_page_revisions')->count());
+        $this->assertSame(2, DB::connection('cn')->table(config('filament-page.tables.page_revisions'))->count());
     }
+    public function test_v2_page_api_requires_scope_for_paths_and_filters_frozen_targets(): void
+    {
+        $release = $this->seedPages();
+        $release->forceFill(['tenant_id' => app(TenantContext::class)->requireId()])->save();
+        $manifest = app(ReleaseManifestService::class)->freeze($release);
+        config(['filament-cms.deployment.build_api_token' => 'build-secret', 'filament-cms.publication_routing' => null]);
+        $this->withToken('build-secret');
+        $url = '/headless/releases/' . $manifest->release_id . '/pages';
+        $this->getJson($url)->assertOk()->assertJsonCount(4, 'data')->assertJsonMissingPath('data.0.content_snapshot')->assertJsonMissingPath('data.0.connection');
+        $this->getJson($url . '?source_path=/about')->assertUnprocessable();
+        $this->getJson($url . '?path=/en/about')->assertUnprocessable();
+        $this->getJson($url . '?scope_id=foreign')->assertUnprocessable();
+        $this->getJson($url . '?target_id=foreign')->assertUnprocessable();
+        $this->getJson($url . '?target_id=' . $manifest->context['targets'][1]['target_id'])->assertOk()->assertJsonCount(2, 'data')->assertJsonPath('data.0.projection.name', 'us en');
+        $this->getJson($url . '?source_path=/about&scope_id=' . $manifest->context['scopes'][3]['scope_id'])->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.url', 'https://us.test/zh/about');
+    }
+
+    public function test_v2_partial_regional_promotion_failure_retains_lock_and_retries_idempotently(): void
+    {
+        $this->seedPages();
+        config(['filament-cms.deployment.frontend_driver' => 'astro', 'filament-cms.deployment.build_webhook_url' => 'https://build.test', 'filament-cms.deployment.webhook_secret' => 'secret']);
+        \Illuminate\Support\Facades\Http::fake(function ($request) {
+            $data = str_ends_with($request->url(), '/capabilities') ? ['schema_version' => 2, 'whole_site_v2' => true, 'activation' => 'shared_release_pointer', 'routing_modes' => ['host', 'path']]
+                : ['schema_version' => 2, 'accepted' => true, ...array_intersect_key($request->data(), array_flip(['website_id', 'release_id', 'attempt_id', 'manifest_digest']))];
+            $body = json_encode($data);
+            $timestamp = (string) now()->timestamp;
+
+            return \Illuminate\Support\Facades\Http::response($body, 200, ['X-Nova-CMS-Timestamp' => $timestamp, 'X-Nova-CMS-Signature' => 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $body, 'secret')]);
+        });
+        $lifecycle = app(\Fayne\CMS\Publishing\PublicationLifecycle::class);
+        $release = $lifecycle->start([]);
+        $manifest = $release->releaseManifest;
+        $evidence = [...app(\Fayne\CMS\Publishing\WholeSitePublisher::class)->identity($release), 'success' => true, 'activation' => 'activated', 'targets' => array_map(fn ($target) => ['target_id' => $target['target_id'], 'status' => 'activated'], $manifest->context['targets'])];
+        $fail = true;
+        \Fayne\Page\Models\PageRevision::creating(function ($revision) use (&$fail) {
+            if ($fail && $revision->getConnectionName() === 'us') {
+                throw new RuntimeException('regional promotion failed');
+            }
+        });
+        try {
+            $lifecycle->completeWholeSite($release, $evidence);
+            $this->fail('Promotion must fail.');
+        } catch (RuntimeException $exception) {
+            $this->assertSame('regional promotion failed', $exception->getMessage());
+        }
+        $this->assertSame('frozen', $manifest->fresh()->status);
+        $this->assertTrue(app(\Fayne\CMS\Publishing\TenantWriteBarrier::class)->isLocked());
+        $this->assertSame(2, DB::connection('cn')->table(config('filament-page.tables.page_revisions'))->count());
+        $this->assertSame(0, DB::connection('us')->table(config('filament-page.tables.page_revisions'))->count());
+        $fail = false;
+        $lifecycle->completeWholeSite($release, $evidence);
+        $this->assertSame('succeeded', $manifest->fresh()->status);
+        $this->assertFalse(app(\Fayne\CMS\Publishing\TenantWriteBarrier::class)->isLocked());
+        foreach (['cn', 'us'] as $connection) {
+            $this->assertSame(2, DB::connection($connection)->table(config('filament-page.tables.page_revisions'))->count());
+        }
+    }
+
 }

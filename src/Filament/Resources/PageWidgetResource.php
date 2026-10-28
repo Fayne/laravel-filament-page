@@ -2,6 +2,7 @@
 
 namespace Fayne\Page\Filament\Resources;
 
+use Fayne\Page\Filament\Concerns\HasResourceConfiguration;
 use Fayne\Page\Models\PageWidget;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -14,6 +15,10 @@ use Filament\Tables\Table;
 
 class PageWidgetResource extends Resource
 {
+    use HasResourceConfiguration;
+
+    protected static string $configurationKey = 'page_widget';
+
     public static function getNavigationLabel(): string
     {
         return __('filament-page::navigation.widgets');

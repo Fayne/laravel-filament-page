@@ -2,6 +2,7 @@
 
 namespace Fayne\Page\Filament\Resources\PageComponentResource\Pages;
 
+use Fayne\Page\Filament\Concerns\ResolvesConfiguredResource;
 use Fayne\Page\Filament\Resources\PageComponentResource;
 use Fayne\Page\Services\ComponentDefinitionTransferService;
 use Filament\Actions\Action;
@@ -17,6 +18,8 @@ use Livewire\Attributes\Locked;
 
 class ListPageComponents extends ListRecords
 {
+    use ResolvesConfiguredResource;
+
     protected static string $resource = PageComponentResource::class;
 
     #[Locked]
@@ -27,7 +30,7 @@ class ListPageComponents extends ListRecords
         return [
             CreateAction::make(),
             Action::make('importDefinitions')->label(__('filament-page::ui.import_component_library'))
-                ->authorize(fn () => PageComponentResource::canCreate())
+                ->authorize(fn () => PageComponentResource::configuredResource()::canCreate())
                 ->schema([
                     FileUpload::make('file')->label(__('filament-page::ui.json_file'))->acceptedFileTypes(['application/json'])->storeFiles(false)->maxSize(5120),
                     Textarea::make('json')->label(__('filament-page::ui.or_paste_json'))->rows(10)->rules(['nullable', 'json']),
@@ -45,9 +48,9 @@ class ListPageComponents extends ListRecords
                     $this->prepareImport($definitions);
                 }),
             Action::make('exportDefinitions')->label(__('filament-page::ui.export_component_library'))
-                ->authorize(fn () => PageComponentResource::canViewAny())
+                ->authorize(fn () => PageComponentResource::configuredResource()::canViewAny())
                 ->action(function () {
-                    Gate::authorize('viewAny', PageComponentResource::getModel());
+                    Gate::authorize('viewAny', PageComponentResource::configuredResource()::getModel());
                     $json = json_encode(app(ComponentDefinitionTransferService::class)->export(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
 
                     return response()->streamDownload(fn () => print ($json), 'components.json', ['Content-Type' => 'application/json', 'Cache-Control' => 'private, no-store']);
@@ -58,7 +61,7 @@ class ListPageComponents extends ListRecords
     public function resolveDefinitionConflictsAction(): Action
     {
         return Action::make('resolveDefinitionConflicts')->label(__('filament-page::ui.resolve_duplicate_components'))
-            ->authorize(fn () => PageComponentResource::canCreate())
+            ->authorize(fn () => PageComponentResource::configuredResource()::canCreate())
             ->modalHeading(__('filament-page::ui.duplicate_slug_found'))
             ->modalDescription(fn () => implode('、', app(ComponentDefinitionTransferService::class)->conflicts($this->pendingDefinitions)))
             ->schema([Radio::make('mode')->label(__('filament-page::ui.import_conflict_handling'))->options(['skip' => __('filament-page::ui.skip_existing'), 'update' => __('filament-page::ui.update_existing')])->required()])
@@ -67,7 +70,7 @@ class ListPageComponents extends ListRecords
 
     private function prepareImport(array $definitions): void
     {
-        Gate::authorize('create', PageComponentResource::getModel());
+        Gate::authorize('create', PageComponentResource::configuredResource()::getModel());
         $conflicts = app(ComponentDefinitionTransferService::class)->conflicts($definitions);
         if ($conflicts !== []) {
             $this->pendingDefinitions = $definitions;
@@ -80,7 +83,7 @@ class ListPageComponents extends ListRecords
 
     private function finishImport(array $definitions, string $mode): void
     {
-        Gate::authorize('create', PageComponentResource::getModel());
+        Gate::authorize('create', PageComponentResource::configuredResource()::getModel());
         $service = app(ComponentDefinitionTransferService::class);
         foreach ($service->conflicts($definitions) as $conflict) {
             [$kind, $slug] = explode(':', $conflict, 2);

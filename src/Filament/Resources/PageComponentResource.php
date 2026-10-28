@@ -2,6 +2,7 @@
 
 namespace Fayne\Page\Filament\Resources;
 
+use Fayne\Page\Filament\Concerns\HasResourceConfiguration;
 use Fayne\Page\Filament\Forms\ComponentPreviewUpload;
 use Fayne\Page\Models\PageComponent;
 use Filament\Actions\DeleteAction;
@@ -18,6 +19,10 @@ use Illuminate\Support\Str;
 
 class PageComponentResource extends Resource
 {
+    use HasResourceConfiguration;
+
+    protected static string $configurationKey = 'page_component';
+
     public static function getNavigationLabel(): string
     {
         return __('filament-page::navigation.page_components');

@@ -19,7 +19,7 @@ class PagePlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel->resources([Resources\PageTemplateResource::class, Resources\PageResource::class, Resources\PageComponentResource::class, Resources\PageComponentFieldResource::class, Resources\PageWidgetResource::class, Resources\PageWidgetFieldResource::class, Resources\PageRevisionResource::class]);
+        $panel->resources([Resources\PageTemplateResource::configuredResource(), Resources\PageResource::configuredResource(), Resources\PageComponentResource::configuredResource(), Resources\PageComponentFieldResource::configuredResource(), Resources\PageWidgetResource::configuredResource(), Resources\PageWidgetFieldResource::configuredResource(), Resources\PageRevisionResource::configuredResource()]);
     }
 
     public function boot(Panel $panel): void {}

@@ -2,6 +2,7 @@
 
 namespace Fayne\Page\Filament\Resources;
 
+use Fayne\Page\Filament\Concerns\HasResourceConfiguration;
 use Fayne\Page\Models\PageRevision;
 use Fayne\Page\Services\PageRevisionService;
 use Filament\Actions\Action;
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Gate;
 
 class PageRevisionResource extends Resource
 {
+    use HasResourceConfiguration;
+
+    protected static string $configurationKey = 'page_revision';
+
     public static function getNavigationLabel(): string
     {
         return __('filament-page::navigation.page_revisions');

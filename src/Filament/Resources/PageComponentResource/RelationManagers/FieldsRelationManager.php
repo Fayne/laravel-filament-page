@@ -8,4 +8,9 @@ use Fayne\PageBuilder\Filament\RelationManagers\DefinitionFieldsRelationManager;
 class FieldsRelationManager extends DefinitionFieldsRelationManager
 {
     protected static ?string $relatedResource = PageComponentFieldResource::class;
+
+    public static function getRelatedResource(): ?string
+    {
+        return PageComponentFieldResource::configuredResource();
+    }
 }
