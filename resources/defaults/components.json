@@ -1,0 +1,2644 @@
+[
+    {
+        "id": 1,
+        "name": "Hero Banner",
+        "slug": "hero-banner",
+        "description": "",
+        "weight": 1,
+        "mockup": {
+            "disk": "popover",
+            "path": "hero-banner.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Contents",
+                "slug": "contents",
+                "resolver": "widget",
+                "options": {
+                    "limit": "7",
+                    "widgets": [
+                        2
+                    ],
+                    "fullWidth": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 3,
+                "widgets": [
+                    {
+                        "id": 2,
+                        "name": "Banner Widget",
+                        "slug": "banner-widget",
+                        "description": "",
+                        "fields": [
+                            {
+                                "title": "Title",
+                                "slug": "title",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 9
+                            },
+                            {
+                                "title": "Media(desktop)",
+                                "slug": "media_desktop",
+                                "resolver": "file",
+                                "options": {
+                                    "is_image": true,
+                                    "required": false,
+                                    "is_multiple": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 10
+                            },
+                            {
+                                "title": "Media(tablet)",
+                                "slug": "media_tablet",
+                                "resolver": "file",
+                                "options": {
+                                    "is_image": true,
+                                    "required": false,
+                                    "is_multiple": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 11
+                            },
+                            {
+                                "title": "Media(mobile)",
+                                "slug": "media_mobile",
+                                "resolver": "file",
+                                "options": {
+                                    "is_image": true,
+                                    "required": false,
+                                    "is_multiple": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 12
+                            },
+                            {
+                                "title": "Headline",
+                                "slug": "headline",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null,
+                                    "remote_options_url": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 13
+                            },
+                            {
+                                "title": "CTA",
+                                "slug": "cta",
+                                "resolver": "widget",
+                                "options": {
+                                    "limit": "2",
+                                    "widgets": [
+                                        1
+                                    ],
+                                    "required": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 14,
+                                "widgets": [
+                                    {
+                                        "id": 1,
+                                        "name": "CTA",
+                                        "slug": "cta-button",
+                                        "description": "",
+                                        "fields": [
+                                            {
+                                                "title": "Label",
+                                                "slug": "label",
+                                                "resolver": "text",
+                                                "options": {
+                                                    "copyable": false,
+                                                    "required": false,
+                                                    "max_length": "250",
+                                                    "default_value": null
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 46
+                                            },
+                                            {
+                                                "title": "Url",
+                                                "slug": "url",
+                                                "resolver": "text",
+                                                "options": {
+                                                    "copyable": false,
+                                                    "required": false,
+                                                    "max_length": "250",
+                                                    "default_value": null
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 47
+                                            },
+                                            {
+                                                "title": "Target",
+                                                "slug": "target",
+                                                "resolver": "select",
+                                                "options": {
+                                                    "options": {
+                                                        "_self": "Self",
+                                                        "_blank": "New tab"
+                                                    },
+                                                    "required": false,
+                                                    "searchable": false
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 48
+                                            },
+                                            {
+                                                "title": "Default color",
+                                                "slug": "default_color",
+                                                "resolver": "color",
+                                                "options": {
+                                                    "help": null,
+                                                    "required": false,
+                                                    "default_value": "#ffffff"
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 49
+                                            },
+                                            {
+                                                "title": "hover_color",
+                                                "slug": "Hover color",
+                                                "resolver": "color",
+                                                "options": {
+                                                    "help": null,
+                                                    "required": false,
+                                                    "default_value": "#ffffff"
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 50
+                                            },
+                                            {
+                                                "title": "Style",
+                                                "slug": "style",
+                                                "resolver": "select",
+                                                "options": {
+                                                    "options": {
+                                                        "1": "Style 1",
+                                                        "2": "Style 2"
+                                                    },
+                                                    "required": false,
+                                                    "searchable": false
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 51
+                                            },
+                                            {
+                                                "title": "Font color",
+                                                "slug": "font_color",
+                                                "resolver": "color",
+                                                "options": {
+                                                    "help": null,
+                                                    "required": false,
+                                                    "default_value": "#000000"
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 52
+                                            },
+                                            {
+                                                "title": "Hover font color",
+                                                "slug": "hover_font_color",
+                                                "resolver": "color",
+                                                "options": {
+                                                    "help": null,
+                                                    "required": false,
+                                                    "default_value": "#000000"
+                                                },
+                                                "rules": {
+                                                    "rules": [],
+                                                    "updateRules": [],
+                                                    "creationRules": []
+                                                },
+                                                "weight": 53
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "title": "CSS classes",
+                                "slug": "css-classes",
+                                "resolver": "text",
+                                "options": {
+                                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                                    "copyable": false,
+                                    "required": false,
+                                    "fullWidth": false,
+                                    "max_length": "250",
+                                    "placeholder": "p-3 ml-2",
+                                    "suggestions": [],
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 15
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "suggestions": [],
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Simple Header With Media",
+        "slug": "simple-header-with-media",
+        "description": "",
+        "weight": 2,
+        "mockup": {
+            "disk": "popover",
+            "path": "simple-header-with-media.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Headline",
+                "slug": "headline",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "suggestions": [],
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 1
+            },
+            {
+                "title": "Media(mobile)",
+                "slug": "media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 2
+            },
+            {
+                "title": "Media(desktop)",
+                "slug": "media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 3
+            },
+            {
+                "title": "Media(tablet)",
+                "slug": "media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 6
+            },
+            {
+                "title": "Teaser text",
+                "slug": "teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 6
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Simple Header",
+        "slug": "simple-header",
+        "description": "",
+        "weight": 3,
+        "mockup": {
+            "disk": "popover",
+            "path": "simple-header.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Headline",
+                "slug": "headline",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "suggestions": [],
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Teaser text",
+                "slug": "teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "255",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 11
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "1/1 Single Card",
+        "slug": "single-card-1-1",
+        "description": "",
+        "weight": 4,
+        "mockup": {
+            "disk": "popover",
+            "path": "single-card-1-1.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Headline",
+                "slug": "headline",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "suggestions": [],
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(desktop)",
+                "slug": "media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(tablet)",
+                "slug": "media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(mobile)",
+                "slug": "media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Title",
+                "slug": "title",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Teaser text",
+                "slug": "teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Url",
+                "slug": "url",
+                "resolver": "text",
+                "options": {
+                    "help": null,
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 14
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "name": "1/2 Two Cards",
+        "slug": "two-cards-1-2",
+        "description": "",
+        "weight": 5,
+        "mockup": {
+            "disk": "popover",
+            "path": "two-cards-1-2.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Headline",
+                "slug": "headline",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "suggestions": [],
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left media(desktop)",
+                "slug": "left_media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left media(tablet)",
+                "slug": "left_media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left media(mobile)",
+                "slug": "left_media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left card title",
+                "slug": "left_card_title",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left teaser text",
+                "slug": "left_teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "suggestions": [],
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right media(desktop)",
+                "slug": "right_media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right media(tablet)",
+                "slug": "right_media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right media(mobile)",
+                "slug": "right_media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right card title",
+                "slug": "right_card_title",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right teaser text",
+                "slug": "right_teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left url",
+                "slug": "left_url",
+                "resolver": "text",
+                "options": {
+                    "help": null,
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right url",
+                "slug": "right_url",
+                "resolver": "text",
+                "options": {
+                    "help": null,
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 22
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "name": "1/3 Three Cards",
+        "slug": "three-cards-1-3",
+        "description": "",
+        "weight": 6,
+        "mockup": {
+            "disk": "popover",
+            "path": "three-cards-1-3.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Headline",
+                "slug": "headline",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "suggestions": [],
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left media(desktop)",
+                "slug": "left_media_desktop",
+                "resolver": "file",
+                "options": {
+                    "help": null,
+                    "required": false,
+                    "fullWidth": false,
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left media(tablet)",
+                "slug": "left_media_tablet",
+                "resolver": "file",
+                "options": {
+                    "help": null,
+                    "required": false,
+                    "fullWidth": true,
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left media(mobile)",
+                "slug": "left_media_mobile",
+                "resolver": "file",
+                "options": {
+                    "help": null,
+                    "required": false,
+                    "fullWidth": true,
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left card title",
+                "slug": "left_card_title",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left teaser text",
+                "slug": "left_teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Left CTA",
+                "slug": "left_cta",
+                "resolver": "widget",
+                "options": {
+                    "limit": "1",
+                    "widgets": [
+                        1
+                    ],
+                    "fullWidth": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4,
+                "widgets": [
+                    {
+                        "id": 1,
+                        "name": "CTA",
+                        "slug": "cta-button",
+                        "description": "",
+                        "fields": [
+                            {
+                                "title": "Label",
+                                "slug": "label",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 46
+                            },
+                            {
+                                "title": "Url",
+                                "slug": "url",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 47
+                            },
+                            {
+                                "title": "Target",
+                                "slug": "target",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "_self": "Self",
+                                        "_blank": "New tab"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 48
+                            },
+                            {
+                                "title": "Default color",
+                                "slug": "default_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 49
+                            },
+                            {
+                                "title": "hover_color",
+                                "slug": "Hover color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 50
+                            },
+                            {
+                                "title": "Style",
+                                "slug": "style",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "1": "Style 1",
+                                        "2": "Style 2"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 51
+                            },
+                            {
+                                "title": "Font color",
+                                "slug": "font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 52
+                            },
+                            {
+                                "title": "Hover font color",
+                                "slug": "hover_font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 53
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Middle media(desktop)",
+                "slug": "middle_media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Middle media(tablet)",
+                "slug": "middle_media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Middle media(mobile)",
+                "slug": "middle_media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Middle card title",
+                "slug": "middle_card_title",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Middle teaser text",
+                "slug": "middle_teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Middle CTA",
+                "slug": "middle_cta",
+                "resolver": "widget",
+                "options": {
+                    "limit": "1",
+                    "widgets": [
+                        1
+                    ],
+                    "fullWidth": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4,
+                "widgets": [
+                    {
+                        "id": 1,
+                        "name": "CTA",
+                        "slug": "cta-button",
+                        "description": "",
+                        "fields": [
+                            {
+                                "title": "Label",
+                                "slug": "label",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 46
+                            },
+                            {
+                                "title": "Url",
+                                "slug": "url",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 47
+                            },
+                            {
+                                "title": "Target",
+                                "slug": "target",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "_self": "Self",
+                                        "_blank": "New tab"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 48
+                            },
+                            {
+                                "title": "Default color",
+                                "slug": "default_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 49
+                            },
+                            {
+                                "title": "hover_color",
+                                "slug": "Hover color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 50
+                            },
+                            {
+                                "title": "Style",
+                                "slug": "style",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "1": "Style 1",
+                                        "2": "Style 2"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 51
+                            },
+                            {
+                                "title": "Font color",
+                                "slug": "font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 52
+                            },
+                            {
+                                "title": "Hover font color",
+                                "slug": "hover_font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 53
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Right media(desktop)",
+                "slug": "right_media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right media(tablet)",
+                "slug": "right_media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right media(mobile)",
+                "slug": "right_media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right card title",
+                "slug": "right_card_title",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right teaser text",
+                "slug": "right_teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right CTA",
+                "slug": "right_cta",
+                "resolver": "widget",
+                "options": {
+                    "limit": "1",
+                    "widgets": [
+                        1
+                    ],
+                    "fullWidth": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4,
+                "widgets": [
+                    {
+                        "id": 1,
+                        "name": "CTA",
+                        "slug": "cta-button",
+                        "description": "",
+                        "fields": [
+                            {
+                                "title": "Label",
+                                "slug": "label",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 46
+                            },
+                            {
+                                "title": "Url",
+                                "slug": "url",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 47
+                            },
+                            {
+                                "title": "Target",
+                                "slug": "target",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "_self": "Self",
+                                        "_blank": "New tab"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 48
+                            },
+                            {
+                                "title": "Default color",
+                                "slug": "default_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 49
+                            },
+                            {
+                                "title": "hover_color",
+                                "slug": "Hover color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 50
+                            },
+                            {
+                                "title": "Style",
+                                "slug": "style",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "1": "Style 1",
+                                        "2": "Style 2"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 51
+                            },
+                            {
+                                "title": "Font color",
+                                "slug": "font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 52
+                            },
+                            {
+                                "title": "Hover font color",
+                                "slug": "hover_font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 53
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Left url",
+                "slug": "left_url",
+                "resolver": "text",
+                "options": {
+                    "help": null,
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Middle url",
+                "slug": "middle_url",
+                "resolver": "text",
+                "options": {
+                    "help": null,
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Right url",
+                "slug": "right_url",
+                "resolver": "text",
+                "options": {
+                    "help": null,
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": true,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 36
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "name": "3+ Cards With Slider",
+        "slug": "three+cards-with-slider",
+        "description": "",
+        "weight": 7,
+        "mockup": {
+            "disk": "popover",
+            "path": "three-more-cards-with-slider.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Headline",
+                "slug": "headline",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "255",
+                    "suggestions": [],
+                    "default_value": null,
+                    "remote_options_url": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Content",
+                "slug": "content",
+                "resolver": "widget",
+                "options": {
+                    "limit": null,
+                    "widgets": [
+                        3
+                    ],
+                    "fullWidth": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4,
+                "widgets": [
+                    {
+                        "id": 3,
+                        "name": "Card widget",
+                        "slug": "card-widget",
+                        "description": "",
+                        "fields": [
+                            {
+                                "title": "Title",
+                                "slug": "title",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null,
+                                    "remote_options_url": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 40
+                            },
+                            {
+                                "title": "Teaser text",
+                                "slug": "teaser_text",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "255",
+                                    "default_value": null,
+                                    "remote_options_url": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 41
+                            },
+                            {
+                                "title": "Card media(desktop)",
+                                "slug": "card_media_desktop",
+                                "resolver": "file",
+                                "options": {
+                                    "is_image": true,
+                                    "required": false,
+                                    "is_multiple": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 42
+                            },
+                            {
+                                "title": "Card media(tablet)",
+                                "slug": "card_media_tablet",
+                                "resolver": "file",
+                                "options": {
+                                    "is_image": true,
+                                    "required": false,
+                                    "is_multiple": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 43
+                            },
+                            {
+                                "title": "Card media(mobile)",
+                                "slug": "card_media_mobile",
+                                "resolver": "file",
+                                "options": {
+                                    "is_image": true,
+                                    "required": false,
+                                    "is_multiple": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 44
+                            },
+                            {
+                                "title": "Url",
+                                "slug": "url",
+                                "resolver": "text",
+                                "options": {
+                                    "help": null,
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 45
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 59
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "name": "Fullscreen Image",
+        "slug": "fullscreen-image",
+        "description": "",
+        "weight": 8,
+        "mockup": {
+            "disk": "popover",
+            "path": "fullscreen-image.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Media(desktop)",
+                "slug": "media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(tablet)",
+                "slug": "media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(mobile)",
+                "slug": "media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 62
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "name": "Image Slider",
+        "slug": "image-slider",
+        "description": "",
+        "weight": 9,
+        "mockup": {
+            "disk": "popover",
+            "path": "image-slider.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Media(desktop)",
+                "slug": "media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(tablet)",
+                "slug": "media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(mobile)",
+                "slug": "media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": true,
+                    "is_multiple": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 66
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "name": "Media & Text",
+        "slug": "media-and-text",
+        "description": "",
+        "weight": 10,
+        "mockup": {
+            "disk": "popover",
+            "path": "media-and-text.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Headline",
+                "slug": "headline",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "suggestions": [],
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Teaser text",
+                "slug": "teaser_text",
+                "resolver": "text",
+                "options": {
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Description",
+                "slug": "description",
+                "resolver": "textarea",
+                "options": {
+                    "help": null,
+                    "rows": "6",
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": null,
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CTA",
+                "slug": "cta",
+                "resolver": "widget",
+                "options": {
+                    "limit": "1",
+                    "widgets": [
+                        1
+                    ],
+                    "fullWidth": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4,
+                "widgets": [
+                    {
+                        "id": 1,
+                        "name": "CTA",
+                        "slug": "cta-button",
+                        "description": "",
+                        "fields": [
+                            {
+                                "title": "Label",
+                                "slug": "label",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 46
+                            },
+                            {
+                                "title": "Url",
+                                "slug": "url",
+                                "resolver": "text",
+                                "options": {
+                                    "copyable": false,
+                                    "required": false,
+                                    "max_length": "250",
+                                    "default_value": null
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 47
+                            },
+                            {
+                                "title": "Target",
+                                "slug": "target",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "_self": "Self",
+                                        "_blank": "New tab"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 48
+                            },
+                            {
+                                "title": "Default color",
+                                "slug": "default_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 49
+                            },
+                            {
+                                "title": "hover_color",
+                                "slug": "Hover color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#ffffff"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 50
+                            },
+                            {
+                                "title": "Style",
+                                "slug": "style",
+                                "resolver": "select",
+                                "options": {
+                                    "options": {
+                                        "1": "Style 1",
+                                        "2": "Style 2"
+                                    },
+                                    "required": false,
+                                    "searchable": false
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 51
+                            },
+                            {
+                                "title": "Font color",
+                                "slug": "font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 52
+                            },
+                            {
+                                "title": "Hover font color",
+                                "slug": "hover_font_color",
+                                "resolver": "color",
+                                "options": {
+                                    "help": null,
+                                    "required": false,
+                                    "default_value": "#000000"
+                                },
+                                "rules": {
+                                    "rules": [],
+                                    "updateRules": [],
+                                    "creationRules": []
+                                },
+                                "weight": 53
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "title": "Media(desktop)",
+                "slug": "media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(tablet)",
+                "slug": "media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(mobile)",
+                "slug": "media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Type",
+                "slug": "type",
+                "resolver": "select",
+                "options": {
+                    "options": {
+                        "1": "Left text & right image",
+                        "2": "Left image & right text"
+                    },
+                    "required": false,
+                    "fullWidth": true,
+                    "searchable": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 70
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "name": "Media & Text With Image Slider",
+        "slug": "media-and-text-with-image-slider",
+        "description": "",
+        "weight": 11,
+        "mockup": {
+            "disk": "popover",
+            "path": "media-and-text-with-image-slider.jpg",
+            "url": null
+        },
+        "specifications": null,
+        "fields": [
+            {
+                "title": "Description",
+                "slug": "description",
+                "resolver": "textarea",
+                "options": {
+                    "help": null,
+                    "rows": "3",
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": null,
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(desktop)",
+                "slug": "media_desktop",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(tablet)",
+                "slug": "media_tablet",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Media(mobile)",
+                "slug": "media_mobile",
+                "resolver": "file",
+                "options": {
+                    "is_image": true,
+                    "required": false,
+                    "fullWidth": false,
+                    "is_multiple": true
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "Type",
+                "slug": "type",
+                "resolver": "select",
+                "options": {
+                    "options": {
+                        "1": "Left text & right image",
+                        "2": "Left image & right text"
+                    },
+                    "required": false,
+                    "fullWidth": false,
+                    "searchable": false
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 4
+            },
+            {
+                "title": "CSS classes",
+                "slug": "css-classes",
+                "resolver": "text",
+                "options": {
+                    "help": "<a href=\"https://tailwindcss.com/docs/styling-with-utility-classes\" target=\"_blank\">Tailwind manual</a>",
+                    "copyable": false,
+                    "required": false,
+                    "fullWidth": false,
+                    "max_length": "250",
+                    "placeholder": "p-3 ml-2",
+                    "default_value": null
+                },
+                "rules": {
+                    "rules": [],
+                    "updateRules": [],
+                    "creationRules": []
+                },
+                "weight": 79
+            }
+        ]
+    }
+]
