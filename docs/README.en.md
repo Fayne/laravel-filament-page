@@ -31,8 +31,6 @@ php artisan cms:page:init
 
 `cms:page:init` initializes the permission catalog and asks whether to create demo homepages. It does not create administrators or automatically grant super-admin access. `app:init`, `admin:create`, and the host's default component-library importer are not commands automatically supplied by this package.
 
-Migrations target new databases and retain names such as `nova_pages`; map names through `tables` configuration. Plan upgrades separately for existing projects. Do not run `migrate:fresh` on business data.
-
 ## 2. Register the panel and permissions
 
 Register the Page plugin on the site panel or tenant workspace when multi-tenancy is enabled. Keep the CMS plugin and complete authentication, session, CSRF, and tenant middleware.

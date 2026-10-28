@@ -31,8 +31,6 @@ php artisan cms:page:init
 
 `cms:page:init` 初始化权限目录并询问是否创建演示首页，不创建管理员或自动给账号授予超级管理员权限。`app:init`、`admin:create` 及宿主默认组件库导入不是本包自动提供的命令。
 
-迁移面向全新数据库，默认保留 `nova_pages` 等表名；可通过 `tables` 配置映射。旧项目应单独评估数据升级，不能在业务数据库使用 `migrate:fresh`。
-
 ## 2. 注册后台与权限
 
 在普通站点 Panel 注册 Page 插件；多租户时注册在租户工作台。保留 CMS 插件和完整的认证、session、CSRF 及租户中间件。
