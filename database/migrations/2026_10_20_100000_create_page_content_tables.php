@@ -35,6 +35,8 @@ return new class extends Migration
                     $table->foreignId('page_id')->constrained(config('filament-page.tables.pages'))->cascadeOnDelete();
                     $table->boolean('is_stash')->default(false);
                     $table->timestamp('released_at')->nullable();
+                    $table->string('publication_manifest_key', 100)->nullable();
+                    $table->unique(['page_id', 'publication_manifest_key'], 'page_revision_publication_unique');
                 } else {
                     $table->boolean('changed')->default(false);
                     $table->boolean('has_stash')->default(false);

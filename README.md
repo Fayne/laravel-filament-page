@@ -24,12 +24,16 @@
 ```bash
 composer require fayne/laravel-filament-page
 php artisan vendor:publish --tag=filament-page-config
-php artisan migrate
+php artisan cms:install
 php artisan filament:assets
-php artisan cms:page:init
+php artisan cms:page:install
 ```
 
-`cms:page:init` 初始化权限目录并询问是否创建演示首页，不创建管理员或自动给账号授予超级管理员权限。`app:init`、`admin:create` 及宿主默认组件库导入不是本包自动提供的命令。
+`cms:page:install` 检查模块表结构是否就绪，默认不生成内容；请先运行 `cms:install`，由 Core 统一执行迁移和权限初始化。仅显式传入 `--demo` 才创建未发布的中英文演示内容，不再询问是否生成示例。生产环境需确认或使用 `--force`。不创建管理员或自动授予账号权限。`app:init`、`admin:create` 是宿主命令。
+
+本包权限由 [`resources/permissions.php`](resources/permissions.php) 自行定义，Service Provider 注册到 Core 的 `PermissionRegistry`；Core 不再硬编码本模块权限。运行 `cms:install` 汇总已注册模块并创建默认角色。已有角色不自动扩权；新增模块后须明确配置新增授权。详见 [权限扩展](../laravel-filament-cms-core/docs/permission-registration.md)。
+
+迁移面向全新项目：修订发布幂等字段 `publication_manifest_key` 及 `(page_id, publication_manifest_key)` 唯一索引直接包含在初始建表迁移中，不再使用单独的增列迁移。
 
 ## 2. 注册后台与权限
 
@@ -111,9 +115,9 @@ class PageResource extends BasePageResource
 
 1. 先创建或导入 Component/Widget 定义，再配置字段类型、选项和验证规则。
 2. 创建页面，选择类型和内容语言，填写以 `/` 开头且不含查询串/片段的路径、标题和 SEO 信息。
-3. 添加内容区块；可在快捷搭建面板点击或拖入组件，并调整顺序。关闭面板不会保存，仍需保存页面表单。固定组件不能在该入口任意增删排序。
+3. 通过方块组合图标打开快捷搭建，使用返回箭头图标返回内容编辑；两个入口均保留悬停提示。添加内容区块；可在快捷搭建面板点击或拖入组件，并调整顺序。左侧卡片有预览图时仅在图片 alt 中保留组件名称，无图时显示名称；悬停或键盘聚焦卡片后显示编辑、上移、下移和移除图标，触屏设备直接显示操作。拖拽排序和上移、下移在浏览器中立即生效，不发起排序请求；顺序随页面表单保存。关闭面板不会保存，仍需保存页面表单。固定组件不能在该入口任意增删排序。
 4. 需要复用结构时保存为模板。模板保留区块/嵌套 Widget 结构，不复制正文属性值；应用时生成新的区块 key。
-5. 修改发布过的页面后，可暂存并恢复编辑；发布成功事件会将冻结内容提升为发布修订。
+5. 修改发布过的页面后，可先保存再暂存：已保存的草稿收进暂存记录，当前页面恢复到上次发布内容；恢复暂存可取回草稿。暂存和恢复都会在存在未保存输入时拒绝执行并提示先保存，避免覆盖表单。发布成功事件会将冻结内容提升为发布修订。
 
 ```php
 // config/filament-page.php
@@ -137,17 +141,18 @@ class PageResource extends BasePageResource
 'supported_locales' => ['en' => 'English', 'zh_CN' => '简体中文'],
 ```
 
-列表按翻译组展示，编辑页切换已有译本或创建缺失语言。不同语言版本分别编辑路径和内容，不自动机器翻译。自定义组件名称、字段标签和帮助文字需要自行提供多语言。前端使用 `locale` 请求具体内容；v2 详情提供可用公开译本，缺失语言不会静默返回另一语言。
+列表按翻译组展示，编辑页切换已有译本或创建缺失语言。所有支持语言均已创建时隐藏“创建翻译”；只有一个可切换译本时直接跳转，多个时弹窗选择，没有可访问译本时隐藏“切换语言”。未保存修改时需先保存。不同语言版本分别编辑路径和内容，不自动机器翻译。自定义组件名称、字段标签和帮助文字需要自行提供多语言。前端使用 `locale` 请求具体内容；v2 详情提供可用公开译本，缺失语言不会静默返回另一语言。
 
 ## 6. 演示首页与组件库
 
 ```bash
-php artisan cms:page:init
-php artisan cms:page:init --tenant=shop
-php artisan cms:page:init --no-interaction
+php artisan cms:page:install
+php artisan cms:page:install --demo
+php artisan cms:page:install --demo --tenant=shop
+php artisan cms:page:install --no-interaction
 ```
 
-交互默认不创建演示数据。`--tenant` 接受启用租户的 ID 或 slug；未指定时优先沿用可信上下文，否则多选租户。单站不传此参数。非交互模式只初始化权限。
+默认安装和非交互安装均不生成演示数据。显式 `--demo` 可用于交互或自动化。`--tenant` 必须与 `--demo` 一起使用，接受启用租户的 ID 或 slug；多租户非交互运行未指定目标时返回失败；交互运行可沿用可信上下文或多选启用租户。单租户不传 `--tenant`，内容写入作用域 0。示例内容失败会返回失败状态，已完成的基础安装不会回滚。
 
 `Fayne\Page\Database\Seeders\DemoHomepageSeeder` 创建同一翻译组的中英文 `/` 首页，并创建 `demo-home-hero`、`demo-home-content` 定义。示例包括横幅、精选商品与购物服务，默认停用、标记变更并设置 `no_index`；不创建实际商品。支持语言需包含 `en` 及 `zh_CN`/`zh-CN`。已有首页、根路径或相关已发布根路径时跳过，定义冲突会报错而不是覆盖。
 

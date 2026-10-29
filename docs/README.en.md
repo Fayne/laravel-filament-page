@@ -24,12 +24,16 @@ Configure host authentication, panels, and permissions using [CMS Core](../../la
 ```bash
 composer require fayne/laravel-filament-page
 php artisan vendor:publish --tag=filament-page-config
-php artisan migrate
+php artisan cms:install
 php artisan filament:assets
-php artisan cms:page:init
+php artisan cms:page:install
 ```
 
-`cms:page:init` initializes the permission catalog and asks whether to create demo homepages. It does not create administrators or automatically grant super-admin access. `app:init`, `admin:create`, and the host's default component-library importer are not commands automatically supplied by this package.
+`cms:page:install` checks that the module schema is ready and creates no content by default. First run `cms:install`, which owns migrations and global permission initialization. Only explicit `--demo` creates unpublished bilingual demo content; there is no additional demo confirmation prompt. Production requires confirmation or `--force`. No administrator is created or granted privileges. `app:init` and `admin:create` are host commands.
+
+This module owns its permission definitions in [`resources/permissions.php`](../resources/permissions.php). Its service provider registers them with Core's `PermissionRegistry`; Core no longer hardcodes this module's permissions. `cms:install` aggregates registered modules and creates initial roles. Existing roles are not silently expanded when adding a module; explicitly assign new permissions. See [permission extensions](../../laravel-filament-cms-core/docs/permission-registration.en.md).
+
+Migrations target new projects: the revision publication key `publication_manifest_key` and unique `(page_id, publication_manifest_key)` index are included in the initial table migration, without a separate add-column migration.
 
 ## 2. Register the panel and permissions
 
@@ -111,9 +115,9 @@ After changes, clear and regenerate configuration/route caches through the deplo
 
 1. Create or import Component/Widget definitions, then configure field types, options, and validation rules.
 2. Create a page, select its type and content language, and enter a path starting with `/` without a query or fragment, a title, and SEO information.
-3. Add blocks directly or click/drag components into the quick-build panel and reorder them. Closing the panel does not save; save the page form separately. Fixed components cannot be freely added, removed, or reordered there.
+3. Open quick build with the squares icon and return to the content editor with the return arrow; both controls retain tooltips. Add blocks directly or click/drag components into the quick-build panel and reorder them. Left-side cards show component names as image alt text when previews exist, or as visible text otherwise. Edit, move up/down, and remove icons appear on hover or keyboard focus; touch devices show them directly. Drag sorting and move up/down update immediately in the browser without a reorder request; the order is persisted with the page form. Closing the panel does not save; save the page form separately. Fixed components cannot be freely added, removed, or reordered there.
 4. Save a template when reusing structure. Templates preserve block/nested-widget structure without copying content attribute values; applying one generates new block keys.
-5. Changes to a published page can be stashed and restored. Successful publication events promote frozen content into published revisions.
+5. Save changes before stashing a published page: the saved draft is stored as a stash and the current page returns to its published content. Restoring the stash retrieves the draft. Stash and restore actions reject unsaved input and prompt you to save first, preventing form data loss. Successful publication events promote frozen content into published revisions.
 
 ```php
 // config/filament-page.php
@@ -137,17 +141,18 @@ The interface provides `zh_CN` and `en`; the profile's interface language does n
 'supported_locales' => ['en' => 'English', 'zh_CN' => '简体中文'],
 ```
 
-The list groups translations, while the edit page switches existing versions or creates missing languages. Each language has separately edited paths and content without automatic machine translation. Supply localized component names, field labels, and help text yourself. Frontends request a content language through `locale`; v2 detail lists available public translations and does not silently return another language when one is missing.
+The list groups translations, while the edit page switches existing versions or creates missing languages. Create translation is hidden when all supported languages exist. Switching opens a single accessible alternative directly, offers a picker for multiple alternatives, and is hidden when none are available. Unsaved changes must be saved first. Each language has separately edited paths and content without automatic machine translation. Supply localized component names, field labels, and help text yourself. Frontends request a content language through `locale`; v2 detail lists available public translations and does not silently return another language when one is missing.
 
 ## 6. Demo homepages and component libraries
 
 ```bash
-php artisan cms:page:init
-php artisan cms:page:init --tenant=shop
-php artisan cms:page:init --no-interaction
+php artisan cms:page:install
+php artisan cms:page:install --demo
+php artisan cms:page:install --demo --tenant=shop
+php artisan cms:page:install --no-interaction
 ```
 
-Interactive demo creation defaults to no. `--tenant` accepts an active tenant ID or slug; without it, a trusted current context takes priority, otherwise multiple tenants can be selected. Omit it for a single site. Non-interactive mode only initializes permissions.
+Default and unattended installation create no demos. Explicit `--demo` works interactively or in automation. `--tenant` requires `--demo` and accepts an active tenant ID or slug. Unattended tenant demos require a target; interactive runs can use a trusted context or select active tenants. Single-site mode rejects `--tenant` and writes to scope 0. Demo errors return failure without rolling back the completed base installation.
 
 `Fayne\Page\Database\Seeders\DemoHomepageSeeder` creates English and Chinese `/` homepages in one translation group, with `demo-home-hero` and `demo-home-content` definitions. Example content includes a banner, featured products, and shopping services. Pages start inactive, changed, and `no_index`; no real products are created. Supported languages must include `en` and `zh_CN`/`zh-CN`. Existing homepages, root paths, or related published root paths cause a skip; conflicting definitions produce errors instead of being overwritten.
 

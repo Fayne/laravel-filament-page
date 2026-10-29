@@ -22,6 +22,7 @@ return [
     'import_conflict_handling' => '本次导入处理方式',
     'json_file' => 'JSON 文件',
     'move_up' => '上移',
+    'move_down' => '下移',
     'name' => '名称',
     'or_paste_json' => '或粘贴 JSON',
     'owning_component' => '所属组件',

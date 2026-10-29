@@ -18,6 +18,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
@@ -58,28 +59,31 @@ class EditPage extends EditRecord
     {
         return [
             Action::make('createTranslation')->label(__('filament-page::translations.create'))
-                ->visible(fn (): bool => $this->record::isMultilingualEnabled())
+                ->visible(fn (): bool => $this->record::isMultilingualEnabled() && $this->creatableLanguages() !== [])
                 ->authorize(fn (): bool => Gate::allows('view', $this->record) && Gate::allows('create', $this->record::class))
                 ->modalDescription(__('filament-page::translations.review'))
                 ->schema([
                     Select::make('locale')->label(__('filament-page::translations.locale'))->required()
-                        ->options(fn (): array => array_diff_key(ContentLocale::supported(), array_flip($this->record->getAvailableLocales()))),
+                        ->options(fn (): array => $this->creatableLanguages()),
                     TextInput::make('path')->label(__('filament-page::translations.path'))->default(fn (): string => $this->record->path)->required()->maxLength(255),
                 ])
                 ->action(function (array $data): void {
-                    $this->assertSavedBeforeLanguageChange();
+                    $this->assertSavedBeforeAction();
                     $target = app(PageTranslationService::class)->create($this->record, $data['locale'], $data['path']);
                     $this->redirect(PageResource::configuredResource()::getUrl('edit', ['record' => $target]), navigate: false);
                 }),
             Action::make('switchLanguage')->label(__('filament-page::translations.switch'))
-                ->visible(fn (): bool => $this->record::isMultilingualEnabled())
-                ->schema([Select::make('locale')->label(__('filament-page::translations.locale'))->required()
-                    ->options(fn (): array => $this->record->translations()->filter(fn ($target): bool => $target->locale !== $this->record->locale && Gate::allows('update', $target))
-                        ->mapWithKeys(fn ($target): array => [$target->locale => (ContentLocale::supported()[$target->locale] ?? $target->locale).' · '.($target->is_active ? __('filament-page::translations.active') : __('filament-page::translations.preview'))])->all())])
+                ->visible(fn (): bool => $this->otherLanguageTargets()->isNotEmpty())
+                ->schema(fn (): array => $this->otherLanguageTargets()->count() > 1 ? [
+                    Select::make('locale')->label(__('filament-page::translations.locale'))->required()
+                        ->options(fn (): array => $this->otherLanguageTargets()
+                            ->mapWithKeys(fn ($target): array => [$target->locale => ContentLocale::supported()[$target->locale].' · '.($target->is_active ? __('filament-page::translations.active') : __('filament-page::translations.preview'))])->all()),
+                ] : [])
                 ->action(function (array $data): void {
-                    $this->assertSavedBeforeLanguageChange();
-                    ContentLocale::resolve($data['locale']);
-                    $target = $this->record->getTranslation($data['locale']);
+                    $this->assertSavedBeforeAction();
+                    abort_unless($this->record::isMultilingualEnabled(), 403);
+                    $targets = $this->otherLanguageTargets();
+                    $target = $targets->count() === 1 ? $targets->first() : $targets->firstWhere('locale', $data['locale'] ?? null);
                     if (! $target) {
                         throw ValidationException::withMessages(['locale' => __('filament-page::translations.missing')]);
                     }
@@ -98,6 +102,7 @@ class EditPage extends EditRecord
                 ->authorize(fn () => Gate::allows('update', $this->record))
                 ->action(function (): void {
                     Gate::authorize('update', $this->record);
+                    $this->assertSavedBeforeAction();
                     app(PageRevisionService::class)->stash($this->record);
                     $this->refreshContent();
                 }),
@@ -106,6 +111,7 @@ class EditPage extends EditRecord
                 ->authorize(fn () => Gate::allows('update', $this->record))
                 ->action(function (): void {
                     Gate::authorize('update', $this->record);
+                    $this->assertSavedBeforeAction();
                     app(PageRevisionService::class)->restoreStash($this->record);
                     $this->refreshContent();
                 }),
@@ -114,11 +120,27 @@ class EditPage extends EditRecord
                 ->authorize(fn (): bool => Gate::allows('view', $this->record) && Gate::allows('create', config('filament-page.models.page_template')))
                 ->schema([TextInput::make('name')->label(__('filament-page::ui.template_name'))->required()->maxLength(255), Textarea::make('description')->label(__('filament-page::ui.description'))])
                 ->action(function (array $data): void {
-                    $this->assertSavedBeforeLanguageChange();
+                    $this->assertSavedBeforeAction();
                     app(PageTemplateService::class)->save($this->record, $data);
                     Notification::make()->title(__('filament-page::ui.page_template_saved'))->success()->send();
                 }),
         ];
+    }
+
+    private function creatableLanguages(): array
+    {
+        return array_diff_key(ContentLocale::supported(), array_flip($this->record->getAvailableLocales()));
+    }
+
+    private function otherLanguageTargets(): Collection
+    {
+        if (! $this->record::isMultilingualEnabled()) {
+            return collect();
+        }
+
+        return $this->record->translations()->filter(fn ($target): bool => $target->getKey() !== $this->record->getKey()
+            && array_key_exists($target->locale, ContentLocale::supported())
+            && Gate::allows('view', $target) && Gate::allows('update', $target));
     }
 
     private function refreshContent(): void
@@ -128,9 +150,11 @@ class EditPage extends EditRecord
         $this->rememberData();
     }
 
-    private function assertSavedBeforeLanguageChange(): void
+    private function assertSavedBeforeAction(): void
     {
         if (md5(str_replace('\\', '', json_encode($this->data, JSON_UNESCAPED_UNICODE))) !== $this->savedDataHash) {
+            Notification::make()->warning()->title(__('filament-page::translations.save_first'))->send();
+
             throw ValidationException::withMessages(['locale' => __('filament-page::translations.save_first')]);
         }
     }

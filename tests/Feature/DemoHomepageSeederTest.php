@@ -71,15 +71,15 @@ it('rejects unsupported language or homepage configurations without partial writ
     ['filament-page.excluded_components', ['homepage']],
 ]);
 
-it('asks before creating test data and skips it when declined or noninteractive', function () {
-    $this->artisan('cms:page:init')->expectsConfirmation(__('filament-page::commands.confirm_demo'), 'no')->assertSuccessful();
-    $this->artisan('cms:page:init', ['--no-interaction' => true])->assertSuccessful();
+it('does not create demo data unless explicitly requested', function () {
+    $this->artisan('cms:page:install')->assertSuccessful();
+    $this->artisan('cms:page:install', ['--no-interaction' => true])->assertSuccessful();
     expect(Page::count())->toBe(0)->and(PageComponent::count())->toBe(0);
 });
 
-it('creates demo homepages only in the confirmed target tenant', function () {
+it('creates demo homepages only in the explicit target tenant', function () {
     $other = Tenant::create(['name' => 'Shop', 'slug' => 'shop']);
-    $this->artisan('cms:page:init', ['--tenant' => 'shop'])->expectsConfirmation(__('filament-page::commands.confirm_demo'), 'yes')->assertSuccessful();
+    $this->artisan('cms:page:install', ['--demo' => true, '--tenant' => 'shop'])->assertSuccessful();
     expect(Page::count())->toBe(0);
     app(TenantContext::class)->run($other, fn () => expect(Page::count())->toBe(2));
 });
@@ -88,10 +88,10 @@ it('prompts for a tenant when no context exists and restores the original contex
     $tenant = Tenant::create(['name' => 'Shop', 'slug' => 'shop']);
     $second = Tenant::create(['name' => 'Second', 'slug' => 'second']);
     $unselected = Tenant::create(['name' => 'Unselected', 'slug' => 'unselected']);
-    $labels = Tenant::where('is_active', true)->orderBy('id')->get()->map(fn ($tenant) => $tenant->name.' ('.$tenant->slug.')')->all();
+    $labels = Tenant::where('is_active', true)->orderBy('id')->get()->mapWithKeys(fn ($tenant) => [$tenant->id => $tenant->name])->all();
     Context::forget('filament-cms.tenant_id');
-    $this->artisan('cms:page:init')->expectsConfirmation(__('filament-page::commands.confirm_demo'), 'yes')
-        ->expectsChoice(__('filament-page::commands.select_tenant'), ['Shop (shop)', 'Second (second)'], $labels)->assertSuccessful();
+    $this->artisan('cms:page:install', ['--demo' => true])
+        ->expectsChoice(__('filament-page::commands.select_tenant'), [$tenant->id, $second->id], $labels)->assertSuccessful();
     expect(app(TenantContext::class)->id())->toBeNull();
     app(TenantContext::class)->run($tenant, fn () => expect(Page::count())->toBe(2));
     app(TenantContext::class)->run($second, fn () => expect(Page::count())->toBe(2));
@@ -99,10 +99,10 @@ it('prompts for a tenant when no context exists and restores the original contex
 });
 
 it('supports single-site creation and rejects an unknown tenant', function () {
-    $this->artisan('cms:page:init', ['--tenant' => 'missing'])->expectsConfirmation(__('filament-page::commands.confirm_demo'), 'yes')->assertFailed();
+    $this->artisan('cms:page:install', ['--demo' => true, '--tenant' => 'missing'])->assertFailed();
     expect(Page::count())->toBe(0);
     config(['filament-cms.tenancy.enabled' => false]);
-    $this->artisan('cms:page:init')->expectsConfirmation(__('filament-page::commands.confirm_demo'), 'yes')->assertSuccessful();
+    $this->artisan('cms:page:install', ['--demo' => true])->assertSuccessful();
     expect(Page::where('tenant_id', 0)->count())->toBe(2);
 });
 

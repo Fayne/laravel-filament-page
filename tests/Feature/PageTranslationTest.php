@@ -2,6 +2,7 @@
 
 use Fayne\CMS\Models\Admin;
 use Fayne\EntityReference\Forms\Components\EntityReferenceSelect;
+use Fayne\Page\Filament\Resources\PageResource;
 use Fayne\Page\Filament\Resources\PageResource\Pages\EditPage;
 use Fayne\Page\Models\Page;
 use Fayne\Page\Models\PageComponent;
@@ -9,6 +10,7 @@ use Fayne\Page\Models\PageWidget;
 use Fayne\Page\Services\PageContentValidator;
 use Fayne\Page\Services\PageRevisionService;
 use Fayne\Page\Services\PageTranslationService;
+use Filament\Forms\Components\Select;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
@@ -196,4 +198,54 @@ it('projects public referenced pages without leaking drafts or recursing through
         ->and(json_encode($projection))->not->toContain('Private unpublished wording');
     $second->update(['is_active' => false]);
     expect($first->publicProjection()['components'][0]['attributes']['page'])->toBeNull();
+});
+
+it('hides translation creation once all configured languages exist', function () {
+    translationPageAdmin();
+    $source = Page::create(['name' => 'Source', 'path' => '/complete', 'locale' => 'en']);
+    foreach (['zh-CN', 'fr'] as $locale) {
+        Page::create(['name' => $locale, 'path' => '/complete', 'locale' => $locale, 'translation_group_id' => $source->translation_group_id]);
+    }
+    Livewire::test(EditPage::class, ['record' => $source->id])->assertActionHidden('createTranslation');
+});
+
+it('switches directly when only one other supported language exists', function () {
+    translationPageAdmin();
+    $source = Page::create(['name' => 'English', 'path' => '/direct', 'locale' => 'en']);
+    $target = Page::create(['name' => 'French', 'path' => '/direct', 'locale' => 'fr', 'translation_group_id' => $source->translation_group_id]);
+    Livewire::test(EditPage::class, ['record' => $source->id])
+        ->callAction('switchLanguage')
+        ->assertRedirect(PageResource::getUrl('edit', ['record' => $target]));
+});
+
+it('hides language switching without another accessible supported translation', function () {
+    translationPageAdmin();
+    $source = Page::create(['name' => 'English', 'path' => '/only', 'locale' => 'en']);
+    Livewire::test(EditPage::class, ['record' => $source->id])->assertActionHidden('switchLanguage')->assertActionVisible('createTranslation');
+    Page::create(['name' => 'French', 'path' => '/only', 'locale' => 'fr', 'translation_group_id' => $source->translation_group_id]);
+    config(['filament-cms.supported_locales' => ['en' => 'English', 'zh-CN' => '中文']]);
+    Livewire::test(EditPage::class, ['record' => $source->id])->assertActionHidden('switchLanguage');
+});
+
+it('retains a language picker for multiple translations and excludes the current language', function () {
+    translationPageAdmin();
+    $source = Page::create(['name' => 'English', 'path' => '/picker', 'locale' => 'en']);
+    foreach (['zh-CN', 'fr'] as $locale) {
+        Page::create(['name' => $locale, 'path' => '/picker', 'locale' => $locale, 'translation_group_id' => $source->translation_group_id]);
+    }
+    $view = Livewire::test(EditPage::class, ['record' => $source->id])->mountAction('switchLanguage')->assertActionMounted('switchLanguage');
+    $view->assertFormFieldExists('locale', function (Select $field): bool {
+        expect(array_keys($field->getOptions()))->toEqualCanonicalizing(['zh-CN', 'fr']);
+
+        return true;
+    });
+});
+
+it('blocks a direct language switch when editor changes are unsaved', function () {
+    translationPageAdmin();
+    $source = Page::create(['name' => 'English', 'path' => '/dirty', 'locale' => 'en']);
+    Page::create(['name' => 'French', 'path' => '/dirty', 'locale' => 'fr', 'translation_group_id' => $source->translation_group_id]);
+    Livewire::test(EditPage::class, ['record' => $source->id])->fillForm(['name' => 'Unsaved'])
+        ->callAction('switchLanguage')->assertHasErrors(['locale'])->assertNoRedirect();
+    expect($source->fresh()->name)->toBe('English');
 });

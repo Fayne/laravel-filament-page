@@ -122,7 +122,7 @@ it('freezes public settings and definition changes through the shared registry',
 
 it('promotes only frozen regional pages and keeps stash and inactive drafts out', function () {
     config(['database.connections.release_region' => ['driver' => 'sqlite', 'database' => ':memory:', 'prefix' => '', 'foreign_key_constraints' => true], 'filament-cms.regions' => [['id' => 'target', 'database' => 'release_region']]]);
-    foreach (['2026_10_20_100000_create_page_content_tables.php', '2026_10_22_100000_add_page_translation_groups.php', '2026_10_27_120000_add_page_revision_publication_manifest_key.php'] as $migration) {
+    foreach (['2026_10_20_100000_create_page_content_tables.php', '2026_10_22_100000_add_page_translation_groups.php'] as $migration) {
         (require dirname(__DIR__, 2).'/database/migrations/'.$migration)->up();
     }
     $default = Page::create(['name' => 'Other region', 'path' => '/', 'is_active' => true, 'changed' => true]);

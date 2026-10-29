@@ -6,7 +6,7 @@ use Fayne\CMS\Events\PublicationSucceeded;
 use Fayne\CMS\Http\Middleware\ResolvePublicTenant;
 use Fayne\CMS\Http\Middleware\SelectContentRegion;
 use Fayne\CMS\Support\ReleaseSnapshotRegistry;
-use Fayne\Page\Console\InitializeCommand;
+use Fayne\Page\Console\InstallCommand;
 use Fayne\Page\Policies\PageComponentFieldPolicy;
 use Fayne\Page\Policies\PageComponentPolicy;
 use Fayne\Page\Policies\PagePolicy;
@@ -25,6 +25,9 @@ class PageServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->callAfterResolving(\Fayne\CMS\Support\Authorization\PermissionRegistry::class, function ($registry): void {
+            $registry->register('page', require __DIR__.'/../resources/permissions.php');
+        });
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-page');
         $this->app->afterResolving(ReleaseSnapshotRegistry::class, function ($registry): void {
             if (! isset($registry->all()['global_page_definitions'])) {
@@ -46,7 +49,7 @@ class PageServiceProvider extends ServiceProvider
         if (! $this->app->routesAreCached()) {
             Route::prefix(config('filament-cms.headless.prefix', 'headless'))->middleware(['api', ResolvePublicTenant::class])->group(__DIR__.'/../routes/headless.php');
         }
-        $this->commands([InitializeCommand::class]);
+        $this->commands([InstallCommand::class]);
         if (! $this->app->routesAreCached()) {
             if (config('filament-page.use_default_frontend_routes')) {
                 Route::prefix('modules/pages')->middleware(['api', ResolvePublicTenant::class, SelectContentRegion::class])->name('modules.pages.')->group(__DIR__.'/../routes/frontend.php');

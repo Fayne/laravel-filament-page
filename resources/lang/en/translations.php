@@ -35,7 +35,7 @@ return [
     'exists' => 'This language version already exists.',
     'conflict' => 'The language version or path already exists. Refresh and check the existing records.',
     'disabled' => 'Multilingual editing is disabled.',
-    'save_first' => 'Save your changes before creating or switching a language version.',
+    'save_first' => 'Save your current changes before performing this action.',
     'missing' => 'The selected language version does not exist.',
     'type_locked' => 'Changing this page type is disabled.',
     'path_taken' => 'The path already exists in this language.',

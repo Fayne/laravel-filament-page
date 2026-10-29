@@ -22,6 +22,7 @@ return [
     'import_conflict_handling' => 'Import conflict handling',
     'json_file' => 'JSON file',
     'move_up' => 'Move up',
+    'move_down' => 'Move down',
     'name' => 'Name',
     'or_paste_json' => 'Or paste JSON',
     'owning_component' => 'Owning component',

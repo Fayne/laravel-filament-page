@@ -11,6 +11,23 @@ use Illuminate\Validation\ValidationException;
 
 trait BuildsPageOutline
 {
+    // Livewire object diffs do not preserve changes to key order alone.
+    public array $quickComponentOrder = [];
+
+    public function updatedQuickComponentOrder(): void
+    {
+        $builder = $this->quickBuilder();
+        $items = $builder->getRawState() ?? [];
+        if (array_filter($this->quickComponentOrder, fn ($key) => ! is_string($key))) {
+            return;
+        }
+        $order = array_flip($this->quickComponentOrder);
+        if (count($order) !== count($items) || array_diff_key($order, $items) || array_diff_key($items, $order)) {
+            return;
+        }
+        $builder->rawState(array_replace($order, $items));
+    }
+
     protected function quickBuilder(): ContentBuilder
     {
         $record = $this->getRecord();

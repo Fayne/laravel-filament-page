@@ -118,3 +118,49 @@ it('moves the first outline card between its immediate neighbour and the third w
     $editor->call('quickMoveComponent', $first, $third)->assertHasNoErrors();
     expect($editor->get('data.components'))->toBe([$second => $before[$second], $first => $before[$first], $third => $before[$third]]);
 });
+
+it('uses the component name only as image alt text in outline cards with previews', function () {
+    $editor = groupedPageEditor();
+    PageComponent::where('slug', 'hero')->update(['mockup' => ['disk' => 'public', 'path' => 'previews/hero.png']]);
+    $editor = Livewire::test(EditPage::class, ['record' => $editor->instance()->getRecord()->id]);
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="UTF-8">'.$editor->html());
+    $card = (new DOMXPath($dom))->query('//article[contains(@class,"cms-quick-card")]')->item(0);
+    expect($card)->not->toBeNull()->and($card->getElementsByTagName('img')->item(0)->getAttribute('alt'))->toBe('Hero')
+        ->and($card->getElementsByTagName('strong')->length)->toBe(0);
+});
+
+it('keeps a visible name for outline cards without previews and labels all four icon actions', function () {
+    $editor = groupedPageEditor();
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="UTF-8">'.$editor->html());
+    $card = (new DOMXPath($dom))->query('//article[contains(@class,"cms-quick-card")]')->item(0);
+    expect($card->getElementsByTagName('img')->length)->toBe(0)
+        ->and($card->getElementsByTagName('strong')->item(0)->textContent)->toContain('Hero');
+    $buttons = $card->getElementsByTagName('button');
+    expect($buttons->length)->toBe(4);
+    foreach (['edit', 'move_up', 'move_down', 'remove'] as $index => $action) {
+        $button = $buttons->item($index);
+        expect($button->getAttribute('aria-label'))->toBe(__('filament-page::ui.'.$action))
+            ->and($button->getAttribute('title'))->toBe(__('filament-page::ui.'.$action))
+            ->and(trim($button->textContent))->toBe('')
+            ->and($button->getElementsByTagName('svg')->length)->toBe(1);
+    }
+});
+
+it('applies deferred browser ordering on save without writing content during synchronization', function () {
+    $editor = groupedPageEditor()->call('quickAddComponent', 'hero')->call('quickAddComponent', 'hero');
+    $items = $editor->get('data.components');
+    [$first, $second, $third] = array_keys($items);
+    $editor->set('data.components.'.$second.'.data.attributes.title', 'Second');
+    $editor->set('data.components.'.$third.'.data.attributes.title', 'Third');
+    $page = $editor->instance()->getRecord();
+    $original = $page->fresh()->components;
+    $editor->set('quickComponentOrder', [$third, $first, $second])->assertHasNoErrors();
+    expect(array_keys($editor->get('data.components')))->toBe([$third, $first, $second])
+        ->and($page->fresh()->components)->toBe($original);
+    $editor->call('save')->assertHasNoFormErrors();
+    $saved = $page->fresh()->components;
+    expect(array_column(array_column($saved, 'attributes'), 'title'))->toBe(['Third', 'Hello', 'Second']);
+    expect($saved[1]['attributes']['cards'][0]['attributes']['text'])->toBe('Card text');
+});
