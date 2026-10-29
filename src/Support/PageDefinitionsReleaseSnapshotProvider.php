@@ -19,7 +19,7 @@ final class PageDefinitionsReleaseSnapshotProvider implements ReleaseSnapshotPro
             $definitions = [];
             foreach (['component', 'widget'] as $kind) {
                 $model = config("filament-page.models.page_{$kind}");
-                $definitions[$kind] = (new $model)->setConnection($connection)->newQuery()->orderBy('id')->get()->map(fn ($record) => [
+                $definitions[$kind] = (new $model)->setConnection($connection)->newQuery()->with('fields')->orderBy('id')->get()->map(fn ($record) => [
                     ...$record->only(['id', 'name', 'slug', 'weight', 'specifications']),
                     'fields' => $record->fields->map(fn ($field) => $field->only(['id', 'title', 'slug', 'resolver', 'options', 'rules', 'weight']))->all(),
                 ])->all();
