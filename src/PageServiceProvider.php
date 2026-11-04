@@ -6,8 +6,10 @@ use Fayne\CMS\Events\PublicationSucceeded;
 use Fayne\CMS\Http\Middleware\ResolvePublicTenant;
 use Fayne\CMS\Http\Middleware\SelectContentRegion;
 use Fayne\CMS\Support\Authorization\PermissionRegistry;
+use Fayne\CMS\Support\Modules\ModuleRegistry;
 use Fayne\CMS\Support\ReleaseSnapshotRegistry;
 use Fayne\Page\Console\InstallCommand;
+use Fayne\Page\Filament\PagePlugin;
 use Fayne\Page\Http\Controllers\ComponentMockupController;
 use Fayne\Page\Policies\PageComponentFieldPolicy;
 use Fayne\Page\Policies\PageComponentPolicy;
@@ -27,6 +29,9 @@ class PageServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
+        $this->callAfterResolving(ModuleRegistry::class, function ($registry): void {
+            $registry->register('page', 'Page', PagePlugin::class);
+        });
         $this->callAfterResolving(PermissionRegistry::class, function ($registry): void {
             $registry->register('page', require __DIR__.'/../resources/permissions.php');
         });
@@ -43,7 +48,7 @@ class PageServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], ['filament-page-migrations', 'cms-module-assets']);
+        $this->publishes([__DIR__.'/../database/migrations' => database_path('migrations')], ['filament-page-migrations', 'cms-module-assets']);
         $this->replaceConfigRecursivelyFrom(__DIR__.'/../config/filament-page.php', 'filament-page');
 
         if (! config()->has('filesystems.disks.page-component-mockups')) {
