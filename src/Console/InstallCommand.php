@@ -24,16 +24,20 @@ class InstallCommand extends Command
         if (! $this->confirmToProceed()) {
             return self::FAILURE;
         }
-        if ($this->call('vendor:publish', ['--tag' => ['filament-page-config', 'filament-page-migrations'], '--no-interaction' => true]) !== self::SUCCESS) {
-            return self::FAILURE;
+        if (! (app()->bound(\Fayne\CMS\Support\InstallationContext::class) && app(\Fayne\CMS\Support\InstallationContext::class)->prepared)) {
+            if ($this->call('vendor:publish', ['--tag' => ['filament-page-config', 'filament-page-migrations'], '--no-interaction' => true]) !== self::SUCCESS) {
+                return self::FAILURE;
+            }
         }
         if (! $this->option('demo') && $this->option('tenant') !== null) {
             $this->error(__('filament-page::commands.tenant_requires_demo'));
 
             return self::FAILURE;
         }
-        if ($this->call('migrate', ['--force' => true]) !== self::SUCCESS) {
-            return self::FAILURE;
+        if (! (app()->bound(\Fayne\CMS\Support\InstallationContext::class) && app(\Fayne\CMS\Support\InstallationContext::class)->prepared)) {
+            if ($this->call('migrate', ['--force' => true]) !== self::SUCCESS) {
+                return self::FAILURE;
+            }
         }
         $model = config('filament-page.models.page', Page::class);
         if (! (new $model)->getConnection()->getSchemaBuilder()->hasTable((new $model)->getTable())) {

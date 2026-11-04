@@ -43,7 +43,7 @@ class PageServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'filament-page-migrations');
+        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], ['filament-page-migrations', 'cms-module-assets']);
         $this->replaceConfigRecursivelyFrom(__DIR__.'/../config/filament-page.php', 'filament-page');
 
         if (! config()->has('filesystems.disks.page-component-mockups')) {
@@ -80,6 +80,6 @@ class PageServiceProvider extends ServiceProvider
         Gate::policy(config('filament-page.models.page_component_field'), PageComponentFieldPolicy::class);
         Gate::policy(config('filament-page.models.page_component'), PageComponentPolicy::class);
         Gate::policy(config('filament-page.models.page'), PagePolicy::class);
-        $this->publishes([__DIR__.'/../config/filament-page.php' => config_path('filament-page.php')], 'filament-page-config');
+        $this->publishes([__DIR__.'/../config/filament-page.php' => config_path('filament-page.php')], ['filament-page-config', 'cms-module-assets']);
     }
 }
