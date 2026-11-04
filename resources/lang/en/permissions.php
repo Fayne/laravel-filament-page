@@ -1,0 +1,3 @@
+<?php
+
+return ['groups' => ['page' => 'Page', 'pagerevision' => 'Page revision', 'pagecomponent' => 'Page component', 'pagecomponentfield' => 'Page component field', 'pagewidget' => 'Page widget', 'pagewidgetfield' => 'Page widget field', 'operations' => 'Operations'], 'resources' => ['page' => 'Page', 'pagerevision' => 'Page revision', 'pagecomponent' => 'Page component', 'pagecomponentfield' => 'Page component field', 'pagewidget' => 'Page widget', 'pagewidgetfield' => 'Page widget field'], 'custom' => ['tenant_viewSensitiveContentPage' => 'View sensitive content page', 'tenant_executeContentHttpPage' => 'Execute content http page']];

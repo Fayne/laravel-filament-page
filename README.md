@@ -239,3 +239,6 @@ node --test tests/Browser/quick-builder-drag.test.cjs
 页面列表提供详情入口，组件内容支持效果视图（按组件顺序堆叠 mockup）、格式化 JSON 和紧凑 JSON 三种模式。Demo 首页组件包含主题色线框预览，重新运行 Demo Seeder 会补齐缺失的预览。
 
 详情页使用与编辑页一致的基础信息、页面内容、SEO 设置和高级设置四个标签页。
+
+
+本包权限名称、分组及标准操作由 `resources/permissions.php` 声明，中英文译文由本包 `resources/lang` 提供。CMS Core 仅汇总和解析，不再维护本包的业务名称映射。

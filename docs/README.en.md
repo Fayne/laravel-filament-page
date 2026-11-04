@@ -239,3 +239,6 @@ Default component mockups use the automatically registered `page-component-mocku
 Page lists provide a detail action with mockup layout preview, formatted JSON, and compact JSON modes. Demo homepage components include theme-aware wireframes. Rerunning the demo seeder fills missing previews.
 
 Detail pages use the same Basic information, Page content, SEO settings, and Advanced settings tabs as the editor.
+
+
+Permission labels and groups are declared by this package in `resources/permissions.php`, with English and Simplified Chinese translations in `resources/lang`. CMS Core resolves the registered metadata without business-name matching.
