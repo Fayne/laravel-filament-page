@@ -43,6 +43,7 @@ class PageServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->publishes([__DIR__ . '/../database/migrations' => database_path('migrations')], 'filament-page-migrations');
         $this->replaceConfigRecursivelyFrom(__DIR__.'/../config/filament-page.php', 'filament-page');
 
         if (! config()->has('filesystems.disks.page-component-mockups')) {
