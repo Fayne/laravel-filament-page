@@ -231,3 +231,11 @@ This software uses a [proprietary license](../LICENSE.md). Use and distribution 
 ## Whole-site frozen API v2
 
 With Core publication routing configured, `/headless/releases/{release_id}/pages` reads the immutable public bundle, independent of current region, locale or routing settings. Authenticate with the build Bearer token through the owning tenant domain. Page list enumeration accepts `target_id` and `scope_id`. A `source_path` query across multiple scopes requires `scope_id`; final `path` queries that match multiple scopes also return 422 without it. Unknown or incompatible scope/target values return 422. Rows expose frozen final URLs and translation URLs, with no raw promotion snapshots or connection identifiers. Whole-site promotion finishes all regional sources before success; interrupted promotion can be retried without duplicate revisions.
+
+Built-in component previews use neutral SVG wireframes that inherit the admin theme primary color.
+
+Default component mockups use the automatically registered `page-component-mockups` disk. It reads bundled SVGs and provides an image route without host filesystem configuration or a storage symlink. Hosts may override the disk by configuring the same name.
+
+Page lists provide a detail action with mockup layout preview, formatted JSON, and compact JSON modes. Demo homepage components include theme-aware wireframes. Rerunning the demo seeder fills missing previews.
+
+Detail pages use the same Basic information, Page content, SEO settings, and Advanced settings tabs as the editor.

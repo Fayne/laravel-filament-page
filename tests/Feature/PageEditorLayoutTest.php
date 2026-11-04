@@ -3,6 +3,7 @@
 use Fayne\CMS\Models\Admin;
 use Fayne\Page\Filament\Resources\PageResource\Pages\CreatePage;
 use Fayne\Page\Filament\Resources\PageResource\Pages\EditPage;
+use Fayne\Page\Filament\Resources\PageResource\Pages\ViewPage;
 use Fayne\Page\Models\Page;
 use Fayne\Page\Models\PageComponent;
 use Fayne\Page\Models\PageWidget;
@@ -163,4 +164,13 @@ it('applies deferred browser ordering on save without writing content during syn
     $saved = $page->fresh()->components;
     expect(array_column(array_column($saved, 'attributes'), 'title'))->toBe(['Third', 'Hello', 'Second']);
     expect($saved[1]['attributes']['cards'][0]['attributes']['text'])->toBe('Card text');
+});
+
+it('renders the tabbed page detail with mockup and both JSON modes', function () {
+    $editor = groupedPageEditor();
+    PageComponent::where('slug', 'hero')->update(['mockup' => ['disk' => 'page-component-mockups', 'path' => 'hero-banner-wireframe.svg']]);
+    Livewire::test(ViewPage::class, ['record' => $editor->instance()->getRecord()->id])
+        ->assertOk()->assertSee('Hero')->assertSee('cms-component-wireframe')->assertSee(__('filament-page::translations.seo'))
+        ->assertSee(__('filament-page::ui.detail_pretty'))
+        ->assertSee(__('filament-page::ui.detail_compact'));
 });

@@ -154,7 +154,9 @@
                                 :class="{'cms-quick-dragging': dragging?.kind === 'item' && dragging.key === @js((string) $key)}">
                                 <div class="cms-quick-guide" x-show="dragging && target === @js((string) $key)" x-cloak aria-hidden="true"><span>{{ __('filament-page::ui.drop_here') }}</span></div>
                                 <div class="cms-quick-preview">
-                                    @if ($definition['image'])
+                                    @if ($definition['wireframe'] ?? false)
+                                        @include('filament-page::filament.component-wireframe', ['name' => $definition['name'], 'svg' => $definition['wireframe']])
+                                    @elseif ($definition['image'])
                                         <img draggable="false" src="{{ $definition['image'] }}" alt="{{ $definition['name'] }}" loading="lazy">
                                     @else
                                         <div class="cms-quick-placeholder"><strong>{{ $item['data']['internalTitle'] ?? '' }} {{ $definition['name'] }}</strong></div>
@@ -187,7 +189,11 @@
                                 @dragstart="startDrag($event, 'library', @js($slug))"
                                 @dragend="dragging = null; target = null"
                                 @click="if (!busy) {busy=true; try {await $wire.quickAddComponent(@js($slug));} finally {busy=false}}">
-                                @if ($definition['image'])<img draggable="false" src="{{ $definition['image'] }}" alt="{{ $definition['name'] }}" loading="lazy">@endif
+                                @if ($definition['wireframe'] ?? false)
+                                    @include('filament-page::filament.component-wireframe', ['name' => $definition['name'], 'svg' => $definition['wireframe']])
+                                @elseif ($definition['image'])
+                                    <img draggable="false" src="{{ $definition['image'] }}" alt="{{ $definition['name'] }}" loading="lazy">
+                                @endif
                                 <strong>{{ $definition['name'] }}</strong>
                             </button>
                         @empty<p>{{ __('filament-page::ui.create_a_component_definition_first') }}</p>@endforelse
@@ -196,6 +202,7 @@
             </section>
         </div>
     <style>
+        .cms-component-wireframe{--mockup-primary:var(--primary-600,#475569)}.cms-component-wireframe svg{display:block;width:100%;height:auto}
         .cms-quick-builder{position:fixed;inset:0;z-index:60}.cms-quick-backdrop{position:absolute;inset:0;background:#0008}.cms-quick-panel{position:absolute;right:0;top:0;bottom:0;width:min(960px,100vw);background:var(--gray-50,#f9fafb);color:#111827;display:flex;flex-direction:column}.cms-quick-panel header{display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid #d1d5db}.cms-quick-columns{display:grid;grid-template-columns:minmax(0,1fr) 280px;min-height:0;flex:1}.cms-quick-outline,.cms-quick-library{padding:1rem;overflow-y:auto}.cms-quick-library{border-left:1px solid #d1d5db}.cms-quick-panel h2,.cms-quick-panel h3{font-weight:600}.cms-quick-panel p{font-size:.875rem;margin:.5rem 0 1rem;color:#6b7280}.cms-quick-panel article,.cms-quick-library>button{display:block;width:100%;text-align:left;background:white;border:1px solid #d1d5db;border-radius:.75rem;padding:.75rem;margin-top:.75rem;cursor:grab}.cms-quick-panel img{width:100%;height:120px;object-fit:contain;margin-bottom:.5rem}.cms-quick-preview{position:relative;min-height:160px;border-radius:inherit;overflow:hidden}
         .cms-quick-panel .cms-quick-card{padding:0}
         .cms-quick-preview img{display:block;width:100%;height:auto;min-height:160px;margin:0;object-fit:contain}

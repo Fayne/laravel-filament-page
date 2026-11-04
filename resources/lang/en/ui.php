@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'detail_components' => 'Components',
+    'detail_view' => 'Layout preview',
+    'detail_pretty' => 'Formatted JSON',
+    'detail_compact' => 'Compact JSON',
+
     'apply_template_help' => 'Applying a template replaces the unsaved component structure. Use it before entering page content.',
     'quick_builder_help' => 'Arrange components using previews, then return to the form to edit content. Changes are saved with the page.',
     'component_definitions_imported' => 'Component definitions imported',

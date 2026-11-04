@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'detail_components' => '普通组件',
+    'detail_view' => '效果视图',
+    'detail_pretty' => '格式化 JSON',
+    'detail_compact' => '紧凑 JSON',
+
     'apply_template_help' => '应用模板会替换当前尚未保存的组件结构，请在填写页面内容前使用。',
     'quick_builder_help' => '通过预览图安排组件顺序，再回到表单填写内容。修改随页面一起保存。',
     'component_definitions_imported' => '组件配置导入完成',

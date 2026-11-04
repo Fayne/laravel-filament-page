@@ -45,7 +45,11 @@ trait BuildsPageOutline
             $query = (new $model)->setConnection($this->getRecord()->getConnectionName())->newQuery();
         }
 
-        return $query->orderBy('weight')->orderBy('id')->get()->mapWithKeys(fn ($component) => [$component->slug => ['name' => $component->name, 'image' => ComponentPreview::url($component->mockup)]])->all();
+        return $query->orderBy('weight')->orderBy('id')->get()->mapWithKeys(fn ($component) => [$component->slug => [
+            'name' => $component->name,
+            'image' => ComponentPreview::url($component->mockup),
+            'wireframe' => ComponentPreview::wireframe($component->mockup),
+        ]])->all();
     }
 
     public function quickAddComponent(string $slug, ?string $before = null): void

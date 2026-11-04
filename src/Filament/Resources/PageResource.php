@@ -12,6 +12,7 @@ use Fayne\PageBuilder\Support\ContentStateAdapter;
 use Fayne\PageBuilder\Support\EloquentContentDefinitions;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -157,6 +158,7 @@ class PageResource extends Resource
                     )),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
                 DeleteAction::make()
                     ->modalDescription(__('filament-page::translations.delete_scope'))
@@ -183,6 +185,6 @@ class PageResource extends Resource
 
     public static function getPages(): array
     {
-        return ['index' => PageResource\Pages\ListPages::route('/'), 'create' => PageResource\Pages\CreatePage::route('/create'), 'edit' => PageResource\Pages\EditPage::route('/{record}/edit')];
+        return ['index' => PageResource\Pages\ListPages::route('/'), 'create' => PageResource\Pages\CreatePage::route('/create'), 'view' => PageResource\Pages\ViewPage::route('/{record}'), 'edit' => PageResource\Pages\EditPage::route('/{record}/edit')];
     }
 }

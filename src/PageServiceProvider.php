@@ -5,8 +5,10 @@ namespace Fayne\Page;
 use Fayne\CMS\Events\PublicationSucceeded;
 use Fayne\CMS\Http\Middleware\ResolvePublicTenant;
 use Fayne\CMS\Http\Middleware\SelectContentRegion;
+use Fayne\CMS\Support\Authorization\PermissionRegistry;
 use Fayne\CMS\Support\ReleaseSnapshotRegistry;
 use Fayne\Page\Console\InstallCommand;
+use Fayne\Page\Http\Controllers\ComponentMockupController;
 use Fayne\Page\Policies\PageComponentFieldPolicy;
 use Fayne\Page\Policies\PageComponentPolicy;
 use Fayne\Page\Policies\PagePolicy;
@@ -25,7 +27,7 @@ class PageServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->callAfterResolving(\Fayne\CMS\Support\Authorization\PermissionRegistry::class, function ($registry): void {
+        $this->callAfterResolving(PermissionRegistry::class, function ($registry): void {
             $registry->register('page', require __DIR__.'/../resources/permissions.php');
         });
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'filament-page');
@@ -43,10 +45,24 @@ class PageServiceProvider extends ServiceProvider
     {
         $this->replaceConfigRecursivelyFrom(__DIR__.'/../config/filament-page.php', 'filament-page');
 
+        if (! config()->has('filesystems.disks.page-component-mockups')) {
+            config(['filesystems.disks.page-component-mockups' => [
+                'driver' => 'local',
+                'root' => __DIR__.'/../resources/images/mockup',
+                'url' => url('/filament-page/mockups'),
+                'visibility' => 'public',
+                'throw' => false,
+            ]]);
+        }
+
         Event::listen(PublicationSucceeded::class, PromoteReleasedPages::class);
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-page');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         if (! $this->app->routesAreCached()) {
+            Route::get('filament-page/mockups/{filename}', ComponentMockupController::class)
+                ->where('filename', '[a-z0-9-]+-wireframe\.svg')
+                ->name('filament-page.mockups');
+
             Route::prefix(config('filament-cms.headless.prefix', 'headless'))->middleware(['api', ResolvePublicTenant::class])->group(__DIR__.'/../routes/headless.php');
         }
         $this->commands([InstallCommand::class]);

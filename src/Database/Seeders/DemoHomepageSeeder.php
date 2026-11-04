@@ -54,7 +54,16 @@ class DemoHomepageSeeder extends Seeder
             'demo-home-hero' => ['Demo homepage hero', ['title' => 'text', 'subtitle' => 'text', 'button_label' => 'text', 'button_url' => 'text']],
             'demo-home-content' => ['Demo homepage content', ['body' => 'rich_text']],
         ] as $slug => [$name, $fields]) {
-            $component = $model::firstOrCreate(['slug' => $slug], ['name' => $name]);
+            $component = $model::firstOrCreate(['slug' => $slug], ['name' => $name, 'mockup' => [
+                'disk' => 'page-component-mockups',
+                'path' => ($slug === 'demo-home-hero' ? 'demo-home-hero' : 'demo-home-content').'-wireframe.svg',
+            ]]);
+            if (! $component->mockup) {
+                $component->update(['mockup' => [
+                    'disk' => 'page-component-mockups',
+                    'path' => $slug.'-wireframe.svg',
+                ]]);
+            }
             if (! $component->wasRecentlyCreated) {
                 $existing = $component->fields()->get()->mapWithKeys(fn ($field) => [$field->slug => $field->resolver])->all();
                 ksort($existing);

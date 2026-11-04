@@ -231,3 +231,11 @@ node --test tests/Browser/quick-builder-drag.test.cjs
 ## 整站冻结 API v2
 
 启用 Core 发布路由后，`/headless/releases/{release_id}/pages` 从不可变公共清单读取，不依赖当前区域、语言或路由配置。通过所属租户域名及构建 Bearer token 鉴权。页面枚举支持 `target_id`、`scope_id`；多范围 source_path 查询必须指定 scope，最终 path 匹配多个范围时也需 scope。未知或不兼容范围/目标返回 422。响应携带冻结最终 URL、翻译 URL，不暴露原始晋升内容和连接标识。整站页面在所有区域晋升完成后才记录成功，部分失败可重试且不重复创建发布版本。
+
+内置组件预览采用中性 SVG 线框示意图，并自动继承后台主题主色。
+
+默认组件的 mockup 使用包自动注册的 `page-component-mockups` 磁盘，读取包内 SVG 并提供图片访问路由，无需编辑宿主的 `config/filesystems.php` 或创建存储软链接。宿主可通过同名磁盘配置覆盖默认设置。
+
+页面列表提供详情入口，组件内容支持效果视图（按组件顺序堆叠 mockup）、格式化 JSON 和紧凑 JSON 三种模式。Demo 首页组件包含主题色线框预览，重新运行 Demo Seeder 会补齐缺失的预览。
+
+详情页使用与编辑页一致的基础信息、页面内容、SEO 设置和高级设置四个标签页。
