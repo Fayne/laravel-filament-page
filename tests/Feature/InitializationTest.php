@@ -28,3 +28,23 @@ it('registers its own permissions without unrelated modules and preserves restri
         ->and($viewer->hasPermissionTo('tenant.viewSensitiveContentPage'))->toBeFalse()
         ->and($manager->hasPermissionTo('tenant.executeContentHttpPage'))->toBeTrue();
 });
+
+it('publishes its own config without replacing host customizations', function () {
+    $directory = sys_get_temp_dir() . '/page-config-' . bin2hex(random_bytes(6));
+    mkdir($directory);
+    $original = app()->configPath();
+    app()->useConfigPath($directory);
+    try {
+        (new ReflectionMethod(\Illuminate\Support\ServiceProvider::class, 'publishes'))->invoke(app()->getProvider(\Fayne\Page\PageServiceProvider::class), [
+            dirname(__DIR__, 2) . '/config/filament-page.php' => $directory . '/filament-page.php',
+        ], 'filament-page-config');
+        $this->artisan('cms:page:install', ['--no-interaction' => true])->assertSuccessful();
+        expect(is_file($directory . '/filament-page.php'))->toBeTrue();
+        file_put_contents($directory . '/filament-page.php', '<?php return ["host_setting" => true];');
+        $this->artisan('cms:page:install', ['--no-interaction' => true])->assertSuccessful();
+        expect(require $directory . '/filament-page.php')->toBe(['host_setting' => true]);
+    } finally {
+        app()->useConfigPath($original);
+        \Illuminate\Support\Facades\File::deleteDirectory($directory);
+    }
+});

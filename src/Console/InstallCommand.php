@@ -24,6 +24,9 @@ class InstallCommand extends Command
         if (! $this->confirmToProceed()) {
             return self::FAILURE;
         }
+        if ($this->call('vendor:publish', ['--tag' => 'filament-page-config', '--no-interaction' => true]) !== self::SUCCESS) {
+            return self::FAILURE;
+        }
         if (! $this->option('demo') && $this->option('tenant') !== null) {
             $this->error(__('filament-page::commands.tenant_requires_demo'));
 
